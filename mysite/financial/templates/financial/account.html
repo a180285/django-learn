@@ -1,9 +1,21 @@
 {% if account_list %}
+    已经存在的账户：
     <ul>
     {% for account in account_list %}
         <li>{{ account.name }}</li>
     {% endfor %}
     </ul>
 {% else %}
-    <p>No accounts are available.</p>
+    <p>没有账户。</p>
 {% endif %}
+
+{% if has_error %}<p><strong>输入账户不合法</strong></p>{% endif %}
+
+<form action="{% url 'financial:add_account' %}" method="post">
+{% csrf_token %}
+  户名：<input type="text" name="name"></input> <br/>
+  利息管理费率：<input type="text" name="interest_manage_rate" value = '0'></input>% <br/>
+  提现手续费：<input type="text" name="pick_up_rate" value = '0'></input>% <br/>
+  备注：<input type="text" name="comment"></input> <br/>
+<input type="submit" value="add" />
+</form>
