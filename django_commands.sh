@@ -10,3 +10,5 @@ python manage.py makemigrations polls
 python manage.py shell
 python manage.py createsuperuser
 
+python manage.py test polls
+
