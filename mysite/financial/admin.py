@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Account, AccountRecord, CashFlow
+from .models import UserAccount, AccountRecord, CashFlow
 
-admin.site.register(Account)
+admin.site.register(UserAccount)
 admin.site.register(AccountRecord)

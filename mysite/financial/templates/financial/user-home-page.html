@@ -1,0 +1,22 @@
+<form method="post">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+<input type="submit" value="Add Account" />
+</form>
+
+
+已经存在的账户：
+<ul>
+{% for account in account_list %}
+    <li>
+      <a href="{% url 'financial:show_record' account.pk %}"> {{ account.name }} </a>
+      - - - - - -
+      <a href="{% url 'financial:edit_account' account.pk %}"> Edit </a>
+      - - - - - -
+      <a href="{% url 'financial:delete_account' account.pk %}"> Delete </a>  
+    </li>
+{% endfor %}
+</ul>
+

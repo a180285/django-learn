@@ -5,7 +5,11 @@ from . import views
 app_name = 'financial'
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
-    url(r'^account/$', views.account, name='account'),
-    url(r'^add_account/$', views.add_account, name = "add_account")
+    url(r'^$', views.UserHomePage.as_view(), name='user_home_page'),
+    url(r'^edit-account/(?P<account_id>[0-9]+)/$', views.UserHomePage.as_view(), 
+      name='edit_account'),
+    url(r'^delete-account/(?P<account_id>[0-9]+)/$', views.DeleteAccount.as_view(), 
+      name='delete_account'),
+    url(r'^account/(?P<account_id>[0-9]+)/$', views.EditRecord.as_view(), 
+      name='show_record'),
 ]

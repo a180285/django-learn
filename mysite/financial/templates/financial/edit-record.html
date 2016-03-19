@@ -1,0 +1,21 @@
+<form method="post">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+<input type="submit" value="Add Record" />
+</form>
+
+
+<table>
+  <tr>
+    <th>Date</th>
+    <th>Money</th>
+  </tr>
+{% for record in record_list %}
+  <tr>
+    <td> {{ record.date }} </td>
+    <td> {{ record.money }} </td>
+  </tr>
+{% endfor %}
+</table>
