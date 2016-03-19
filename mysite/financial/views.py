@@ -60,7 +60,7 @@ class UserHomePage(OwnerRequiredView):
       account.user_id = request.user.id
       account.save()
 
-      form = UserAccountForm()
+      return HttpResponseRedirect(reverse('financial:user_home_page', args = ()))
 
     return self._response(form)
 
@@ -88,7 +88,7 @@ class EditRecord(OwnerRequiredView):
       record.account_id = account_id
       record.save()
 
-      form = RecordForm()
+      return HttpResponseRedirect(reverse('financial:show_record', args = ()))
 
     return self._response(account_id, form)
 
