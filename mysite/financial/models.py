@@ -22,6 +22,7 @@ class UserAccount(models.Model):
 
 @python_2_unicode_compatible
 class AccountRecord(models.Model):
+  user = models.ForeignKey(User, on_delete = models.CASCADE)
   account = models.ForeignKey(UserAccount, on_delete = models.CASCADE)
   money = models.FloatField()
   date = models.DateField(default = date.today)
@@ -36,6 +37,7 @@ class AccountRecord(models.Model):
 
 @python_2_unicode_compatible
 class CashFlow(models.Model):
+  user = models.ForeignKey(User, on_delete = models.CASCADE)
   account_record = models.ForeignKey(AccountRecord, on_delete = models.CASCADE)
   money = models.FloatField()
   date = models.DateField()

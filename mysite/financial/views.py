@@ -6,13 +6,15 @@ from django.shortcuts import render
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from datetime import date
+from django.utils import timezone
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.template import loader
-from .models import UserAccount, AccountRecord
+from .models import UserAccount, AccountRecord, CashFlow
 from .forms import UserAccountForm, RecordForm
 from django.db import IntegrityError
 
@@ -86,9 +88,10 @@ class EditRecord(OwnerRequiredView):
     if form.is_valid():
       record = form.save(commit = False)
       record.account_id = account_id
+      record.user_id = request.user.id
       record.save()
 
-      return HttpResponseRedirect(reverse('financial:show_record', args = ()))
+      return HttpResponseRedirect(reverse('financial:show_record', args = (account_id, )))
 
     return self._response(account_id, form)
 
@@ -98,3 +101,46 @@ class EditRecord(OwnerRequiredView):
       'record_list': records,
       'form': form}
     return render(self.request, 'financial/edit-record.html', context)
+
+class CashFlowView(OwnerRequiredView):
+  def get(self, request):
+    user_id = request.user.id
+    self._refresh_cash_flow(user_id)
+    flows = CashFlow.objects.filter(user_id = user_id)
+
+    cash_flows = []
+    for flow in flows:
+      cash_flows.append(flow)
+
+    cash_flows.sort(key = lambda x:x.date)
+    cash_flow_daily = {}
+    money_left = 0
+    today = date.today()
+    for i in xrange(-7,28):
+      day = today + timezone.timedelta(days = i)
+      while self._has_cash_flow_before(cash_flows, day):
+        cash_flow = cash_flows.pop(0)
+        money_left += cash_flow.money
+
+      cash_flow_daily[day] = money_left
+
+    cash_flow_daily = cash_flow_daily.items()
+    cash_flow_daily.sort()
+
+    context = {'cash_flow_daily': cash_flow_daily}
+    return render(self.request, 'financial/cash-flow.html', context)
+
+  def _has_cash_flow_before(self, cash_flows, day):
+    return cash_flows and cash_flows[0].date <= day
+
+  def _refresh_cash_flow(self, user_id):
+    records = AccountRecord.objects.filter(user_id = user_id)
+    for record in records:
+      if record.cashflow_set.all():
+        continue
+
+      CashFlow.objects.create(
+        user_id = user_id,
+        account_record_id = record.id,
+        date = record.date, 
+        money = record.money)

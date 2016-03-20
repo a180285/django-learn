@@ -1,0 +1,12 @@
+<table>
+  <tr>
+    <th>Date</th>
+    <th>Money</th>
+  </tr>
+{% for date, money in cash_flow_daily %}
+  <tr>
+    <td> {{ date }} </td>
+    <td> {{ money }} </td>
+  </tr>
+{% endfor %}
+</table>

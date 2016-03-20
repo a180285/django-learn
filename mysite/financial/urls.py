@@ -12,4 +12,5 @@ urlpatterns = [
       name='delete_account'),
     url(r'^account/(?P<account_id>[0-9]+)/$', views.EditRecord.as_view(), 
       name='show_record'),
+    url(r'^cash-flow/$', views.CashFlowView.as_view(), name='cash_flow_page'),
 ]
