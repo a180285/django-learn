@@ -105,7 +105,8 @@ class EditRecord(OwnerRequiredView):
       record.user_id = request.user.id
       record.save()
 
-      return HttpResponseRedirect(reverse('financial:show_record', args = (account_id, )))
+      last_edit_date = form['date'].value()
+      form = RecordForm(initial = {'date': last_edit_date})
 
     return self._response(account_id, form)
 
