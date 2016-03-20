@@ -9,11 +9,13 @@
 
 <table>
   <tr>
+    <th>Delete</th>
     <th>Date</th>
     <th>Money</th>
   </tr>
 {% for record in record_list %}
   <tr>
+    <td> <a href="{% url 'financial:delete_record' record.account_id record.id %}">Delete</a> </td>
     <td> {{ record.date }} </td>
     <td> {{ record.money }} </td>
   </tr>

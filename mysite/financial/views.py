@@ -30,7 +30,9 @@ class OwnerRequiredView(UserPassesTestMixin, View):
       self.login_url = reverse('financial:user_home_page', args=())
       self.redirect_field_name = None
 
-    return self.request.user.is_authenticated() and self._check_account_owner()
+    return (self.request.user.is_authenticated() and 
+      self._check_account_owner() and
+      self._check_record_owner())
 
   def _check_account_owner(self):
     account_id = self.kwargs.get("account_id")
@@ -43,6 +45,18 @@ class OwnerRequiredView(UserPassesTestMixin, View):
 
     account = any_accounts[0]
     return account.user_id == self.request.user.id
+
+  def _check_record_owner(self):
+    record_id = self.kwargs.get("record_id")
+    if not record_id:
+      return True
+
+    any_records = AccountRecord.objects.filter(pk = record_id)
+    if not any_records:
+      return False
+
+    record = any_records[0]
+    return record.user_id == self.request.user.id
 
 class UserHomePage(OwnerRequiredView):
   def get(self, request, account_id = None):
@@ -144,3 +158,9 @@ class CashFlowView(OwnerRequiredView):
         account_record_id = record.id,
         date = record.date, 
         money = record.money)
+
+class DeleteRecord(OwnerRequiredView):
+  def get(self, request, account_id, record_id):
+    AccountRecord.objects.get(pk = record_id).delete()
+
+    return HttpResponseRedirect(reverse('financial:show_record', args = (account_id, )))
