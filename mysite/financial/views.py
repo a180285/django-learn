@@ -111,8 +111,10 @@ class EditRecord(OwnerRequiredView):
     return self._response(account_id, form)
 
   def _response(self, account_id, form):
+    account = UserAccount.objects.get(pk = account_id)
     records = AccountRecord.objects.filter(account_id = account_id)
     context = {
+      "account_name": account.name,
       'record_list': records,
       'form': form}
     return render(self.request, 'financial/edit-record.html', context)
