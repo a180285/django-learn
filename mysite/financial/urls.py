@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^account/(?P<account_id>[0-9]+)/delete_record/(?P<record_id>[0-9]+)/$', views.DeleteRecord.as_view(), 
       name='delete_record'),
     url(r'^cash-flow/$', views.CashFlowView.as_view(), name='cash_flow_page'),
+    url(r'^chart/$', views.weather_chart_view, name='chart'),
 ]

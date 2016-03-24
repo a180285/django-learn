@@ -25,14 +25,14 @@ $(function () {
         yAxis: {
             min: 0,
             title: {
-                text: '余额'
+                text: '访问量'
             }
         },
         legend: {
             enabled: false
         },
         tooltip: {
-            pointFormat: '余额: <b>{point.y:.0f}</b>',
+            pointFormat: '访问量: <b>{point.y:.1f}</b>',
         },
         series: [{
             name: '今天的日志',
@@ -55,17 +55,3 @@ $(function () {
 });
 </script>
 <div id="container" style="min-width:700px;height:400px"></div>           //出图就在这里了
-
-
-<table>
-  <tr>
-    <th>Date</th>
-    <th>Money</th>
-  </tr>
-{% for date, money in cash_flow_daily %}
-  <tr>
-    <td> {{ date }} </td>
-    <td> {{ money }} </td>
-  </tr>
-{% endfor %}
-</table>
