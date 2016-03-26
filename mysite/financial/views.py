@@ -23,6 +23,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic import View
 
+from django.views.generic.dates import DateMixin
+
+class GenericDateView(DateMixin):
+  date_field = '%Y-%m-%d'
+
+  def _format_date(self, date):
+    return date.strftime(self.get_date_field())
+
 class OwnerRequiredView(UserPassesTestMixin, View):
   def test_func(self):
 
@@ -119,19 +127,18 @@ class EditRecord(OwnerRequiredView):
       'form': form}
     return render(self.request, 'financial/edit-record.html', context)
 
-class CashFlowView(OwnerRequiredView):
+class CashFlowView(OwnerRequiredView, GenericDateView):
   def get(self, request):
     user_id = request.user.id
     self._refresh_cash_flow(user_id)
-    flows = CashFlow.objects.filter(user_id = user_id)
+    flows = CashFlow.objects.filter(user_id = user_id).order_by('date')
 
     cash_flows = []
     for flow in flows:
       cash_flows.append(flow)
 
-    output_cash_flows = list(cash_flows)
+    output_cash_flows = []
 
-    cash_flows.sort(key = lambda x:x.date)
     cash_flow_daily = {}
     money_left = 0
     today = date.today()
@@ -140,8 +147,10 @@ class CashFlowView(OwnerRequiredView):
       while self._has_cash_flow_before(cash_flows, day):
         cash_flow = cash_flows.pop(0)
         money_left += cash_flow.money
+        if cash_flow_daily:
+          output_cash_flows.append(cash_flow)
 
-      cash_flow_daily[day] = money_left
+      cash_flow_daily[self._format_date(day)] = money_left
 
     cash_flow_daily = cash_flow_daily.items()
     cash_flow_daily.sort()
@@ -150,7 +159,7 @@ class CashFlowView(OwnerRequiredView):
     data = []
 
     for (day, money) in cash_flow_daily:
-      categories.append(day.strftime("%Y-%m-%d"))
+      categories.append(day)
       data.append(money)
 
     context = {
