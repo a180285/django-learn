@@ -129,6 +129,8 @@ class CashFlowView(OwnerRequiredView):
     for flow in flows:
       cash_flows.append(flow)
 
+    output_cash_flows = list(cash_flows)
+
     cash_flows.sort(key = lambda x:x.date)
     cash_flow_daily = {}
     money_left = 0
@@ -155,7 +157,8 @@ class CashFlowView(OwnerRequiredView):
       'cash_flow_daily': cash_flow_daily,
       'categories': categories,
       'data': data,
-      'user': request.user}
+      'user': request.user,
+      'cash_flows': output_cash_flows}
     return render(self.request, 'financial/cash-flow.html', context)
 
   def _has_cash_flow_before(self, cash_flows, day):
@@ -178,25 +181,3 @@ class DeleteRecord(OwnerRequiredView):
     AccountRecord.objects.get(pk = record_id).delete()
 
     return HttpResponseRedirect(reverse('financial:show_record', args = (account_id, )))
-
-def weather_chart_view(request):
-  d={'1.htldxhzj.duapp.com': 9398,
-   'gtxapi.cdn.duapp.com': 79496,
-   'www.xxx.com': 2477070,
-   'www.baidu.com': 1465,
-   'www.bing.com': 777,
-   'www.aaa.com': 1113101,
-   'www.ccc.net.cn': 922,
-   'www.zhanimei.ga': 29847,
-   'www.zhanimei.ml': 40155,
-   'www.zhasini.ml': 373436}
-
-  categories = d.keys()
-  data = d.values()
-
-  context = {
-    'user':request.user,
-    'categories':categories,
-    'data':data}
-
-  return render(request, 'financial/chart.html', context)

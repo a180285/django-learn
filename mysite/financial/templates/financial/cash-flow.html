@@ -53,18 +53,20 @@ $(function () {
     });
 });
 </script>
-<div id="container" style="min-width:700px;height:400px"></div>           //出图就在这里了
+<div id="container" style="min-width:700px;height:400px"></div>
 
 
 <table>
   <tr>
+    <th>Account</th>
     <th>Date</th>
     <th>Money</th>
   </tr>
-{% for date, money in cash_flow_daily %}
+{% for cash_flow in cash_flows %}
   <tr>
-    <td> {{ date }} </td>
-    <td> {{ money }} </td>
+    <td> {{ cash_flow.account_record.account.name }} </td>
+    <td> {{ cash_flow.date }} </td>
+    <td> {{ cash_flow.money }} </td>
   </tr>
 {% endfor %}
 </table>
