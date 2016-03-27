@@ -23,7 +23,6 @@ SECRET_KEY = '+9+@o(n)8d^z+dq0ieqh&v+#1%lc!3k-&%urnmp$-h1j2^9$$+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-# DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
