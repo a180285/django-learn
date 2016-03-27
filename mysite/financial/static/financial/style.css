@@ -1,0 +1,41 @@
+li a {
+    color: green;
+}
+
+hr {
+  color: sienna;
+}
+
+p {
+  margin-left: 20px;
+}
+
+body {
+    background: white url("images/small-fundraising-heart.png") no-repeat right bottom;
+}
+
+input[type="submit"] {
+  width:120px;
+  margin-left:35px;
+  display:block;
+  font-family: Verdana, Arial;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+
+th, td {
+  text-align: right;
+  width: 90px;
+  border: 1px solid #aaa;
+}
+
+th {
+  background-color: #d5d5d5;
+}
+
+td {
+  background-color: #efefef;
+}

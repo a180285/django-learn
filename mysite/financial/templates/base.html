@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'financial/style.css' %}" />
 </head>
 <body>
   <a href="{% url 'financial:user_home_page' %}">账户管理</a>

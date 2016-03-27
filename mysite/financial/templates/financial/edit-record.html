@@ -26,7 +26,7 @@
 {% for record in record_list %}
   <tr>
     <td> <a href="{% url 'financial:delete_record' record.account_id record.id %}">Delete</a> </td>
-    <td> {{ record.date }} </td>
+    <td> {{ record.date | date:"Y-m-d" }} </td>
     <td> {{ record.money }} </td>
   </tr>
 {% endfor %}
