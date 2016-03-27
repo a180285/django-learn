@@ -1,8 +1,0 @@
-<form action="{% url 'financial:new_account' %}" method="post">
-  {% csrf_token %}
-  <TABLE>
-    {{ form.as_table }}
-  </TABLE>
-  <input type="submit" value="Submit" />
-</form>
-

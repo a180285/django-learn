@@ -1,0 +1,14 @@
+{% load staticfiles %}
+<html>
+<head>
+  <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+  <a href="{% url 'financial:user_home_page' %}">账户管理</a>
+  <a href="{% url 'financial:cash_flow_page' %}">现金流页面</a>
+
+  <hr/>
+
+  {% block content %}{% endblock %}
+</body>
+</html>

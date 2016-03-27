@@ -1,3 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %} 账户管理 {% endblock %}
+
+{% block content %}
+
 <h1> {{ account_name }}</h1>
 
 <form method="post">
@@ -25,3 +31,5 @@
   </tr>
 {% endfor %}
 </table>
+
+{% endblock %}

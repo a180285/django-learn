@@ -1,3 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %} 账户管理 {% endblock %}
+
+{% block content %}
+
 <form method="post">
   {% csrf_token %}
   <table>
@@ -21,3 +27,4 @@
 {% endfor %}
 </ul>
 
+{% endblock %}
