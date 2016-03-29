@@ -3,10 +3,10 @@
 <head>
   <title>{% block title %}{% endblock %}</title>
   <!-- <link rel="stylesheet" type="text/css" href="{% static 'financial/style.css' %}" /> -->
-  
+
 <style type="text/css">
 
-li a {
+a {
     color: green;
 }
 
@@ -49,6 +49,19 @@ td {
 }
 
 </style>
+
+<script src="http://lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js">
+</script>
+
+<script>
+deleteThenRemove = function(url, id) {
+  var confirmDelete = confirm("Do you really want to delete?");
+  if (confirmDelete) {
+    $.get(url);
+    $('#' + id).remove();
+  }
+}
+</script>
 
 </head>
 <body>
