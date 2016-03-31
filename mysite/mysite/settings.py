@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '+9+@o(n)8d^z+dq0ieqh&v+#1%lc!3k-&%urnmp$-h1j2^9$$+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'polls.apps.PollsConfig',
     'financial.apps.FinancialConfig',
+    'django_tables2',
 ]
 
 MIDDLEWARE_CLASSES = [

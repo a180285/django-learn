@@ -14,6 +14,7 @@ class EDai365():
     self.platform = Platform.objects.get_or_create(name = self.platform_name)[0]
 
   def run(self):
+    self.platform.loan_set.all().delete()
     index = 1
     while self._get(index):
       index += 1
@@ -22,7 +23,7 @@ class EDai365():
   def _get(self, index):
     has_item = False
     print("Page : %d" % index)
-    url = 'http://www.365edai.cn/Lend/Cloanlist.aspx?k=e&sortby=1&sort=desc&page=' + str(index)
+    url = 'http://www.365edai.cn/Lend/Cloanlist.aspx?k=e&page=' + str(index)
     req = urllib2.Request(url)
     data = urllib2.urlopen(req).read()
     biaos = data.split("biaoname")[1:]
@@ -46,24 +47,34 @@ class EDai365():
         available_money = raw_datas[36 - 2]
         prograss = raw_datas[43 - 2]
 
-      available_money = available_money[3:].replace(',', '')
-      total_money = total_money.replace(',', '')
+      available_money = float(available_money[3:].replace(',', ''))
+      total_money = float(total_money.replace(',', ''))
+
+      print('link -> %s' % link)
+      print('biao_name -> %s' % biao_name)
+      print('total_money -> %s' % total_money)
+      print('year_rate -> %s' % year_rate)
+      print('duration -> %s' % duration)
+      print('duration_type -> %s' % duration_type)
+      print('additional_rate -> %s' % additional_rate)
+      print('return_method -> %s' % return_method)
+      print('available_money -> %s' % available_money)
+      print('prograss -> %s' % prograss)
+
       if duration_type == '天':
-        duration_type = 'days'
+        duration_days = int(duration)
       elif duration_type == '月':
-        duration_type = 'months'
+        duration_days = int(duration) * 30
 
-      print('link -> ' + link)
-      print('biao_name -> ' + biao_name)
-      print('total_money -> ' + total_money)
-      print('year_rate -> ' + year_rate)
-      print('duration -> ' + duration)
-      print('duration_type -> ' + duration_type)
-      print('additional_rate -> ' + additional_rate)
-      print('return_method -> ' + return_method)
-      print('available_money -> ' + available_money)
-      print('prograss -> ' + prograss)
+      actaul_year_rate = float(year_rate) + float(additional_rate) * 360 / duration_days
 
-      has_item = has_item or (float(available_money) > 0)
+      if available_money > 100:
+        has_item = True
+        self.platform.loan_set.create(name = biao_name,
+          duration = duration_days,
+          year_rate = actaul_year_rate,
+          link = link,
+          total_money = total_money,
+          available_money = available_money)
 
     return has_item

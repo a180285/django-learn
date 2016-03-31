@@ -41,6 +41,14 @@ class Loan(models.Model):
   duration = models.IntegerField(default = 0)
   year_rate = models.FloatField(default = 0)
   link = models.URLField(unique = True)
+  total_money = models.FloatField(default = 0)
+  available_money = models.FloatField(default = 0)
+
+  def name_with_link(self):
+    return u'<a href="%s" target="blank">%s</a>' % (self.link, self.name)
+
+  def get_absolute_url(self):
+    return self.link
 
   def __str__(self):
     return '%s > %s' % (self.platform.name, self.name)
