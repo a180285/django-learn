@@ -18,7 +18,7 @@ class EDai365():
     index = 1
     while self._get(index):
       index += 1
-    print("self.platform > " + str(self.platform))
+    print("EDai365 Done ...")
 
   def _get(self, index):
     has_item = False
