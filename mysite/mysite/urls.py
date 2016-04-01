@@ -22,5 +22,5 @@ urlpatterns = [
     url(r'^f/', include('financial.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/login/$', auth_views.login),
-    url(r'^polls/', include('polls.urls')),
+    url(r'^p/', include('polls.urls')),
 ]
