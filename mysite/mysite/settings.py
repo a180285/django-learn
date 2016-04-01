@@ -117,6 +117,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = '/www/'
+STATIC_ROOT = '/www/static/'
 
 # LOGIN_URL = '/admin/login/'
