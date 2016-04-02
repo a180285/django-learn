@@ -11,6 +11,10 @@ import urllib2, urllib
 def split_by_tag(raw_data_str):
   return [raw_data.split('<')[0].strip() for raw_data in raw_data_str.split('>')]
 
+def debug_output(datas):
+  for index in xrange(0, len(datas)):
+    print("%s -> %s" % (index, datas[index][:100]))
+
 class EDai365():
   def __init__(self):
     self.platform_name = "365易贷"
@@ -37,8 +41,6 @@ class EDai365():
         continue
 
       raw_datas = split_by_tag(raw_biao)
-
-      # self.debug(raw_datas)
 
       link = 'http://www.365edai.cn' + raw_datas[0].split('"')[2]
       biao_name = raw_datas[1]
@@ -90,10 +92,6 @@ class EDai365():
 
     return has_item
 
-  def debug(self, datas):
-    for index in xrange(0, len(datas)):
-      print("%s -> %s" % (index, datas[index][:100]))
-
 class GuoChengJinRong():
   def __init__(self):
     self.platform_name = "国诚金融"
@@ -136,7 +134,7 @@ class GuoChengJinRong():
       duration = int(duration[:-6]) * 30
       prograss = float(prograss[:-1])
       available_money = total_money * (100 - prograss) / 100
-      print '----------------'
+      print '----------------------------'
       print 'for_new_member : %s' % for_new_member
       print 'name : %s' % name
       print 'total_money : %s' % total_money
@@ -159,3 +157,67 @@ class GuoChengJinRong():
           for_new_member = for_new_member)
 
     return has_item
+
+class XueShanDai(object):
+  def __init__(self):
+    self.platform_name = "雪山贷"
+    self.platform = Platform.objects.get_or_create(name = self.platform_name)[0]
+  
+  def run(self):
+    self.platform.loan_set.all().delete()
+    index = 1
+    while self._get(index):
+      index += 1
+    print("XueShanDai Done ...")
+
+  def _get(self, index):
+    has_item = False
+    print("Page : %d" % index)
+    url = 'http://www.xueshandai.com/invest/list?max=5&offset=%s&multiple=true&offest=0' % (index * 5 - 5)
+    print("url -> " + url)
+
+    req = urllib2.Request(url)
+    data = urllib2.urlopen(req).read()
+    biaos = data.split("listing list_inner")[1:]
+    for raw_biao in biaos:
+      datas = split_by_tag(raw_biao)
+
+      # debug_output(datas)
+
+      name = datas[8]
+      total_money = datas[47]
+      year_rate = datas[55]
+      duration = datas[63]
+      duration_type = datas[64]
+      prograss = datas[74]
+      link = 'http://www.xueshandai.com' + raw_biao.split('href="')[1].split('"')[0]
+
+      print '----------------------------'
+      print('name : %s' % name)
+      print('total_money : %s' % total_money)
+      print('year_rate : %s' % year_rate)
+      print('duration : %s' % duration)
+      print('duration_type : %s' % duration_type)
+      print('prograss : %s' % prograss)
+      print('link : %s' % link)
+
+      total_money = float(total_money.replace(',', ''))
+      prograss = float(prograss[:-1])
+      year_rate = float(year_rate)
+      available_money = total_money * (100 - prograss) / 100
+      duration = int(duration)
+      if duration_type == '个月':
+        duration = duration * 30
+
+      if available_money > 100:
+        has_item = True
+        self.platform.loan_set.create(name = name,
+          duration = duration,
+          year_rate = year_rate,
+          link = link,
+          total_money = total_money,
+          available_money = available_money)
+
+    return has_item
+
+    

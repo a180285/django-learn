@@ -24,3 +24,11 @@ table.paleblue > tbody > tr > td > span.true {
 table.paleblue > tbody > tr > td > span.false {
     background-image: url('/static/django_tables2/themes/paleblue/img/true.gif');
 }
+
+table.paleblue > tbody > tr > td > a {
+    display:inline-block;
+    overflow:hidden;
+    width: 150px;
+    text-overflow: ellipsis; 
+    white-space: nowrap;
+}
