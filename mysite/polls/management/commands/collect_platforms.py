@@ -3,12 +3,16 @@
 from django.core.management.base import BaseCommand, CommandError
 from financial.models import AccountRecord
 
-from ._private import EDai365
+from ._private import *
 
 class Command(BaseCommand):
   help = 'Running for cron-job'
 
   def handle(self, *args, **options):
-    for t in [EDai365()]:
+    # test = GuoChengJinRong()
+    # test.run()
+
+    for t in [EDai365(), GuoChengJinRong()]:
       t.run()
+
     self.stdout.write(self.style.SUCCESS('Successfully run the job '))

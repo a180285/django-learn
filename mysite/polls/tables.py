@@ -10,6 +10,7 @@ class LoanTable(tables.Table):
   link = tables.Column(visible = False)
   id = tables.Column(visible = False)
   total_money = tables.Column(visible = False)
+  for_new_member = tables.BooleanColumn(verbose_name = '标的类型')
 
   def render_year_rate(self, value):
     return '%.1f %%' % (value)
@@ -41,7 +42,7 @@ class LoanTable(tables.Table):
   class Meta:
     model = Loan
     attrs = {"class": "paleblue"}
-    sequence = ("name", "duration", 'year_rate', 'available_money')
+    sequence = ("name", 'for_new_member', "duration", 'year_rate', 'available_money')
   # platform = models.ForeignKey(Platform, on_delete = models.CASCADE)
   # name = models.CharField(max_length = 128)
   # duration = models.IntegerField(default = 0)

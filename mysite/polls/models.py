@@ -43,6 +43,7 @@ class Loan(models.Model):
   link = models.URLField(unique = True)
   total_money = models.FloatField(default = 0)
   available_money = models.FloatField(default = 0)
+  for_new_member = models.BooleanField(default = False)
 
   def name_with_link(self):
     return u'<a href="%s" target="blank">%s</a>' % (self.link, self.name)
