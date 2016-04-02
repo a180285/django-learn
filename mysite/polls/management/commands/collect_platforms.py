@@ -9,10 +9,13 @@ class Command(BaseCommand):
   help = 'Running for cron-job'
 
   def handle(self, *args, **options):
-    test = HeShiDai()
-    test.run()
+    # test = HeShiDai()
+    # test.run()
 
-    # for t in [EDai365(), GuoChengJinRong(), XueShanDai()]:
-    #   t.run()
+    for t in [EDai365(), 
+        GuoChengJinRong(), 
+        XueShanDai(),
+        HeShiDai()]:
+      t.run()
 
     self.stdout.write(self.style.SUCCESS('Successfully run the job '))
