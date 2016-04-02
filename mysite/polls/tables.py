@@ -42,7 +42,7 @@ class LoanTable(tables.Table):
   class Meta:
     model = Loan
     attrs = {"class": "paleblue"}
-    sequence = ("name", 'for_new_member', "duration", 'year_rate', 'available_money')
+    sequence = ('platform', "name", 'for_new_member', "duration", 'year_rate', 'available_money')
   # platform = models.ForeignKey(Platform, on_delete = models.CASCADE)
   # name = models.CharField(max_length = 128)
   # duration = models.IntegerField(default = 0)

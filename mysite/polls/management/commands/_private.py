@@ -15,6 +15,9 @@ def debug_output(datas):
   for index in xrange(0, len(datas)):
     print("%s -> %s" % (index, datas[index][:100]))
 
+def get_first_link(raw_txt):
+  return raw_txt.split('href="')[1].split('"')[0]
+
 class EDai365():
   def __init__(self):
     self.platform_name = "365易贷"
@@ -190,7 +193,7 @@ class XueShanDai(object):
       duration = datas[63]
       duration_type = datas[64]
       prograss = datas[74]
-      link = 'http://www.xueshandai.com' + raw_biao.split('href="')[1].split('"')[0]
+      link = 'http://www.xueshandai.com' + get_first_link(raw_biao)
 
       print '----------------------------'
       print('name : %s' % name)
@@ -220,4 +223,66 @@ class XueShanDai(object):
 
     return has_item
 
-    
+class HeShiDai():
+  def __init__(self):
+    self.platform_name = "合时代"
+    self.platform = Platform.objects.get_or_create(name = self.platform_name)[0]
+  
+  def run(self):
+    self.platform.loan_set.all().delete()
+    index = 1
+    while self._get(index):
+      index += 1
+    print("HeShiDai Done ...")
+
+  def _get(self, index):
+    has_item = False
+    print("Page : %d" % index)
+    url = 'https://www.heshidai.com/lctz/financeList.act'
+    values = {'pageBean.pageNum' : index,
+        'paramMap.sort' : 1,
+        'paramMap.desc' : 'desc',
+        'paramMap.isNewBorrow' : 1}
+    data = urllib.urlencode(values)
+    req = urllib2.Request(url, data)
+    data = urllib2.urlopen(req).read()
+
+    for raw_biao in data.split('</ul>')[1:-1]:
+      datas = split_by_tag(raw_biao)
+      # debug_output(datas)
+
+      name = datas[6]
+      delta = 0
+      if datas[13]:
+        delta = 2
+      total_money = datas[11 + delta]
+      duration = datas[14 + delta]
+      year_rate = datas[18 + delta]
+      prograss = datas[29 + delta]
+
+      link = get_first_link(raw_biao)
+
+      print '----------------------------'
+      print('name : %s' % name)
+      print('total_money : %s' % total_money)
+      print('duration : %s' % duration)
+      print('year_rate : %s' % year_rate)
+      print('prograss : %s' % prograss)
+      print('link : %s' % link)
+
+      if total_money[-3:] == "万":
+        total_money = float(total_money[:-3]) * 10000
+      duration = int(duration) * 30
+      prograss = float(prograss[:-1])
+      available_money = total_money * (100 - prograss) / 100
+
+      if available_money > 100:
+        has_item = True
+        self.platform.loan_set.create(name = name,
+          duration = duration,
+          year_rate = year_rate,
+          link = link,
+          total_money = total_money,
+          available_money = available_money)
+
+    return has_item
