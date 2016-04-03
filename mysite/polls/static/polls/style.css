@@ -2,6 +2,11 @@ li a {
   color: green;
 }
 
+ul > li {
+  display: inline-block;
+  margin-left: 20px;
+}
+
 body {
   background: white url("images/small-fundraising-heart.png") no-repeat right bottom;
 }
