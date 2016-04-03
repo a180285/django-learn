@@ -42,6 +42,7 @@ def encode_json(json):
 
 class BasePlatform():
   platform_name = None
+  platform_link = None
   platform = None
 
   name = None
@@ -61,6 +62,8 @@ class BasePlatform():
   def run(self):
     print("%s started ..." % self.platform_name)
     self.platform = Platform.objects.get_or_create(name = self.platform_name)[0]
+    self.platform.link = self.platform_link
+    self.platform.save()
     self.platform.loan_set.all().delete()
 
     index = 1
@@ -90,6 +93,9 @@ class BasePlatform():
       self.output_fields()
 
       if self.available_money > 100:
+        if Loan.objects.filter(link = self.link):
+          continue
+
         has_item = True
         self.platform.loan_set.create(name = self.name,
           duration = self.duration,
@@ -124,6 +130,7 @@ class BasePlatform():
 
 class HuRongBao(BasePlatform):
   platform_name = "互融宝"
+  platform_link = 'http://www.hurbao.com/'
 
   def get_request(self, index):
     url = 'https://www.hurbao.com/invests?p=%s' % index
@@ -160,6 +167,7 @@ class HuRongBao(BasePlatform):
 
 class AnJieCaiFu(BasePlatform):
   platform_name = "安捷财富"
+  platform_link = 'http://www.haoinvest.com/'
 
   def get_request(self, index):
     url = 'http://www.haoinvest.com/invest/hot/p/%s.html' % index
@@ -190,6 +198,7 @@ class AnJieCaiFu(BasePlatform):
 
 class NoNoBank(BasePlatform):
   platform_name = "诺诺镑客"
+  platform_link = 'http://www.nonobank.com/'
   is_json_format = True
 
   def get_request(self, index):
@@ -229,6 +238,7 @@ class NoNoBank(BasePlatform):
 
 class ChengHuiTong(BasePlatform):
   platform_name = "诚汇通"
+  platform_link = 'http://www.chenghuitong.net/'
 
   def get_request(self, index):
     url = 'https://www.chenghuitong.net/borrow/default-index.html?page=' + str(index)
@@ -269,6 +279,7 @@ class ChengHuiTong(BasePlatform):
 
 class ShiTouJinRong(BasePlatform):
   platform_name = "石投金融"
+  platform_link = 'http://www.shitou.com/'
 
   def get_request(self, index):
     url = 'http://www.shitou.com/website/loadLoanProList'
@@ -303,6 +314,7 @@ class ShiTouJinRong(BasePlatform):
 
 class EDai365(BasePlatform):
   platform_name = "365易贷"
+  platform_link = 'http://www.365edai.cn/'
 
   def filter_func(self, raw_biao):
     return raw_biao.find('密码') == -1
@@ -344,6 +356,7 @@ class EDai365(BasePlatform):
 
 class YiQiHao(BasePlatform):
   platform_name = "一起好"
+  platform_link = 'http://www.yiqihao.com/'
 
   def get_request(self, index):
     values = {'p' : index,
@@ -376,6 +389,9 @@ class GuoChengJinRong():
   def __init__(self):
     self.platform_name = "国诚金融"
     self.platform = Platform.objects.get_or_create(name = self.platform_name)[0]
+    platform_link = 'http://www.gcjr.com/'
+    self.platform.link = platform_link
+    self.platform.save()
   
   def run(self):
     self.platform.loan_set.all().delete()
@@ -445,7 +461,10 @@ class XueShanDai(object):
   def __init__(self):
     self.platform_name = "雪山贷"
     self.platform = Platform.objects.get_or_create(name = self.platform_name)[0]
-  
+    platform_link = 'http://www.xueshandai.com/'
+    self.platform.link = platform_link
+    self.platform.save()
+
   def run(self):
     self.platform.loan_set.all().delete()
     index = 1
@@ -510,7 +529,10 @@ class HeShiDai():
   def __init__(self):
     self.platform_name = "合时代"
     self.platform = Platform.objects.get_or_create(name = self.platform_name)[0]
-  
+    platform_link = 'http://www.heshidai.com/'
+    self.platform.link = platform_link
+    self.platform.save()
+
   def run(self):
     self.platform.loan_set.all().delete()
     index = 1

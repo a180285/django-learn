@@ -7,10 +7,6 @@ ul > li {
   margin-left: 20px;
 }
 
-body {
-  background: white url("images/small-fundraising-heart.png") no-repeat right bottom;
-}
-
 div.table-container {
   float: left;
 }
@@ -45,4 +41,8 @@ table.paleblue > tbody > tr > td > a {
 table.platform-table {
   float: left;
   margin-left: 10px;
+  border-collapse: collapse;
+  border-color: #CCC;
+  border: 1px solid #DDD;
 }
+

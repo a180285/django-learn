@@ -31,6 +31,7 @@ class Choice(models.Model):
 class Platform(models.Model):
   name = models.CharField(max_length = 128, unique = True)
   last_update_time = models.DateTimeField(default = timezone.now)
+  link = models.URLField(default = '')
 
   def __str__(self):
     return self.name

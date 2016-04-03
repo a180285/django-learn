@@ -22,7 +22,7 @@ class Command(BaseCommand):
         HuRongBao(),
         HeShiDai()]
 
-    # platforms = [HuRongBao()]
+    # platforms = [EDai365()]
 
     for p in platforms:
       try:
