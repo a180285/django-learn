@@ -8,6 +8,8 @@ from polls.models import Platform, Loan
 
 import urllib2, urllib
 
+import re
+
 def split_by_tag(raw_data_str):
   return [raw_data.split('<')[0].strip() for raw_data in raw_data_str.split('>')]
 
@@ -18,82 +20,154 @@ def debug_output(datas):
 def get_first_link(raw_txt):
   return raw_txt.split('href="')[1].split('"')[0]
 
-class EDai365():
-  def __init__(self):
-    self.platform_name = "365易贷"
-    self.platform = Platform.objects.get_or_create(name = self.platform_name)[0]
+float_pattern = re.compile('[\d,.]+')
+def get_float(raw_str):
+  return float(float_pattern.search(str(raw_str)).group().replace(',', ''))
+
+def get_json(json_datas, key):
+  key = key + '"'
+  for data in json_datas:
+    if data.startswith(key):
+      return data.split(':', 1)[1].strip('"').strip()
+
+def get_available_money(total_money, prograss):
+  return get_float(total_money) * (100 - get_float(prograss)) / 100
+
+class BasePlatform():
+  platform_name = None
+  platform = None
+
+  name = None
+  total_money = None
+  duration = None
+  year_rate = None
+  prograss = None
+  available_money = None
+  link = None
+  for_new_member = False
+
+  def filter_func(self, raw_biao):
+    return True
 
   def run(self):
+    print("%s started ..." % self.platform_name)
+    self.platform = Platform.objects.get_or_create(name = self.platform_name)[0]
     self.platform.loan_set.all().delete()
+
     index = 1
-    while self._get(index):
+    while self.get(index):
       index += 1
-    print("EDai365 Done ...")
 
-  def _get(self, index):
+    print("%s Done ..." % self.platform_name)
+
+  def get(self, index):
     has_item = False
-    print("Page : %d" % index)
-    url = 'http://www.365edai.cn/Lend/Cloanlist.aspx?k=e&page=' + str(index)
-    print("url -> " + url)
+    req = self.get_request(index)
+    print("Page : %s" % index)
+    print("Url : %s" % req.get_full_url())
+    print("Request data : %s" % req.get_data())
 
-    req = urllib2.Request(url)
     data = urllib2.urlopen(req).read()
-    biaos = data.split("biaoname")[1:]
+    biaos = self.get_biaos(data)
+    biaos = filter(self.filter_func, biaos)
     for raw_biao in biaos:
-      if raw_biao.find('密码') != -1:
-        continue
-
       raw_datas = split_by_tag(raw_biao)
+      self.fill_fields(raw_biao, raw_datas)
+      self.output_fields()
 
-      link = 'http://www.365edai.cn' + raw_datas[0].split('"')[2]
-      biao_name = raw_datas[1]
-      total_money = raw_datas[15]
-      year_rate = raw_datas[19]
-      duration = raw_datas[23]
-      duration_type = raw_datas[24]
-      if raw_datas[27]:
-        additional_rate = raw_datas[27]
-        return_method = raw_datas[30]
-        available_money = raw_datas[36]
-        prograss = raw_datas[43]
-      else:
-        additional_rate = '0'
-        return_method = raw_datas[30 - 2]
-        available_money = raw_datas[36 - 2]
-        prograss = raw_datas[43 - 2]
-
-      print('---------------------------------')
-      print('link -> %s' % link)
-      print('biao_name -> %s' % biao_name)
-      print('total_money -> %s' % total_money)
-      print('year_rate -> %s' % year_rate)
-      print('duration -> %s' % duration)
-      print('duration_type -> %s' % duration_type)
-      print('additional_rate -> %s' % additional_rate)
-      print('return_method -> %s' % return_method)
-      print('available_money -> %s' % available_money)
-      print('prograss -> %s' % prograss)
-
-      available_money = float(available_money[3:].replace(',', ''))
-      total_money = float(total_money.replace(',', ''))
-
-      if duration_type == '天':
-        duration_days = int(duration)
-      elif duration_type == '月':
-        duration_days = int(duration) * 30
-
-      actaul_year_rate = float(year_rate) + float(additional_rate) * 360 / duration_days
-
-      if available_money > 100:
+      if self.available_money > 100:
         has_item = True
-        self.platform.loan_set.create(name = biao_name,
-          duration = duration_days,
-          year_rate = actaul_year_rate,
-          link = link,
-          total_money = total_money,
-          available_money = available_money)
+        self.platform.loan_set.create(name = self.name,
+          duration = self.duration,
+          year_rate = self.year_rate,
+          link = self.link,
+          total_money = self.total_money,
+          available_money = self.available_money,
+          for_new_member = self.for_new_member)
 
     return has_item
+
+  def output_fields(self):
+    print('----------------------------')
+    print("name : %s" % self.name)
+    print("total_money : %s" % self.total_money)
+    print("duration : %s" % self.duration)
+    print("year_rate : %s" % self.year_rate)
+    print("prograss : %s" % self.prograss)
+    print("available_money : %s" % self.available_money)
+    print("for_new_member : %s" % self.for_new_member)
+    print("link : %s" % self.link)
+
+class EDai365(BasePlatform):
+  platform_name = "365易贷"
+
+  def filter_func(self, raw_biao):
+    return raw_biao.find('密码') == -1
+
+  def get_request(self, index):
+    url = 'http://www.365edai.cn/Lend/Cloanlist.aspx?k=e&page=' + str(index)
+    return urllib2.Request(url)
+
+  def get_biaos(self, raw_data):
+    return raw_data.split("biaoname")[1:]
+ 
+  def fill_fields(self, raw_biao, raw_datas):
+    self.link = 'http://www.365edai.cn' + get_first_link(raw_biao)
+    self.name = raw_datas[1]
+    self.total_money = raw_datas[15]
+    self.year_rate = raw_datas[19]
+    self.duration = raw_datas[23]
+    self.duration_type = raw_datas[24]
+    self.additional_rate = raw_datas[27]
+    delta = 0
+    print("self.additional_rate : %s" % self.additional_rate)
+    if not self.additional_rate:
+      self.additional_rate = 0
+      delta = -2
+
+    return_method = raw_datas[30 + delta]
+    self.available_money = raw_datas[36 + delta]
+    self.prograss = raw_datas[43 + delta]
+
+    self.output_fields()
+
+    self.available_money = get_float(self.available_money)
+    self.total_money = get_float(self.total_money)
+    self.duration = int(self.duration)
+    if self.duration_type == '月':
+      self.duration = self.duration * 30
+
+    self.year_rate = get_float(self.year_rate) + get_float(self.additional_rate) * 360 / self.duration
+
+class YiQiHao(BasePlatform):
+  platform_name = "一起好"
+
+  def get_request(self, index):
+    values = {'p' : index,
+        'sort' : '',
+        'format' : 'json'}
+    data = urllib.urlencode(values)
+    url = 'https://www.yiqihao.com/loan/list/all'
+    return urllib2.Request(url, data)
+
+  def get_biaos(self, raw_data):
+    return raw_data.split('"lid"')[1:]
+ 
+  def fill_fields(self, raw_biao, raw_datas):
+    json_datas = raw_biao.split(',"')
+    # debug_output(json_datas)
+
+    self.link = 'https://www.yiqihao.com/#!detail&id=' + json_datas[0].split('"')[1]
+    self.name = get_json(json_datas, 'title')
+    self.total_money = get_json(json_datas, 'amount')
+    self.year_rate = get_json(json_datas, 'apr')
+    self.prograss = get_json(json_datas, 'progress')
+    self.duration = get_json(json_datas, 'deadline')
+    self.for_new_member = get_json(json_datas, 'is_newbie')
+
+    self.available_money = get_available_money(self.total_money, self.prograss)
+    self.for_new_member = self.for_new_member == '100'
+    self.duration = get_float(self.duration) * 30
 
 class GuoChengJinRong():
   def __init__(self):
