@@ -3,12 +3,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import RequestContext, loader
+from django.utils import timezone
 
 from polls.models import Platform, Loan
-
 import urllib2, urllib
 
 import re
+
+import simplejson
 
 def split_by_tag(raw_data_str):
   return [raw_data.split('<')[0].strip() for raw_data in raw_data_str.split('>')]
@@ -17,8 +19,8 @@ def debug_output(datas):
   for index in xrange(0, len(datas)):
     print("%s -> %s" % (index, datas[index][:100]))
 
-def get_first_link(raw_txt):
-  return raw_txt.split('href="')[1].split('"')[0]
+def get_link(raw_txt, sep = '"', index = 1):
+  return raw_txt.split('href=')[index].split(sep)[1]
 
 float_pattern = re.compile('[\d,.]+')
 def get_float(raw_str):
@@ -46,6 +48,8 @@ class BasePlatform():
   link = None
   for_new_member = False
 
+  is_json_format = False
+
   def filter_func(self, raw_biao):
     return True
 
@@ -59,6 +63,8 @@ class BasePlatform():
       index += 1
 
     print("%s Done ..." % self.platform_name)
+    self.platform.last_update_time = timezone.now()
+    self.platform.save()
 
   def get(self, index):
     has_item = False
@@ -71,7 +77,10 @@ class BasePlatform():
     biaos = self.get_biaos(data)
     biaos = filter(self.filter_func, biaos)
     for raw_biao in biaos:
-      raw_datas = split_by_tag(raw_biao)
+      if not self.is_json_format:
+        raw_datas = split_by_tag(raw_biao)
+      else:
+        raw_datas = raw_biao
       self.fill_fields(raw_biao, raw_datas)
       self.output_fields()
 
@@ -98,6 +107,126 @@ class BasePlatform():
     print("for_new_member : %s" % self.for_new_member)
     print("link : %s" % self.link)
 
+  def convert_data_by_detault(self):
+    self.total_money = get_float(self.total_money)
+    self.year_rate = get_float(self.year_rate)
+    self.duration = int(get_float(self.duration)) * 30
+    if self.available_money:
+      self.available_money = get_float(self.available_money)
+    else:
+      self.prograss = get_float(self.prograss)
+      self.available_money = get_available_money(self.total_money, self.prograss)
+
+class NoNoBank(BasePlatform):
+  platform_name = "诺诺镑客"
+  is_json_format = True
+
+  def get_request(self, index):
+    index -= 1
+    if index % 2 == 1:
+      url = 'https://www.nonobank.com/Licai/GetLicaiList/8/'
+    else:
+      url = 'https://www.nonobank.com/Licai/IntimatePlanList/8/'
+    url = url + str(index / 2)
+    values = {}
+    data = urllib.urlencode(values)
+    return urllib2.Request(url, data)
+
+  def get_biaos(self, raw_data):
+    json = simplejson.loads(raw_data)
+
+    return json['members']
+ 
+  def fill_fields(self, json, raw_datas):
+    # debug_output(raw_datas)
+    self.link = 'https://www.nonobank.com/Licai/FinancePlan/' + json['fp_id']
+    self.name = json['fp_title']
+
+    self.total_money = json['fp_price']
+    self.year_rate = json['fp_rate_show']
+    self.duration = json['fp_expect']
+    self.prograss = json['fp_percent']
+    self.available_money = None
+    self.for_new_member = self.name.find(u'新客体验') != -1
+
+    self.output_fields()
+
+    self.convert_data_by_detault()
+
+class ChengHuiTong(BasePlatform):
+  platform_name = "诚汇通"
+
+  def get_request(self, index):
+    url = 'https://www.chenghuitong.net/borrow/default-index.html?page=' + str(index)
+    values = {}
+    data = urllib.urlencode(values)
+    return urllib2.Request(url, data)
+
+  def get_biaos(self, raw_data):
+    return raw_data.split('"invest-list-content-box"')[1:]
+ 
+  def fill_fields(self, raw_biao, raw_datas):
+    # debug_output(raw_datas)
+    self.link = get_link(raw_biao)
+
+    additional_rate = 0
+    delta = 0
+    for index in xrange(0,20):
+      data = raw_datas[index]
+      if data.endswith('%'):
+        additional_rate = data
+      elif raw_datas[index]:
+        self.name = data
+        delta = index
+        break
+    
+
+    self.total_money = raw_datas[delta + 4]
+    self.year_rate = raw_datas[delta + 6]
+    self.duration = raw_datas[delta + 8]
+    self.prograss = raw_datas[delta + 12]
+    if not self.prograss:
+      self.prograss = raw_datas[delta + 14]
+    self.available_money = None
+
+    self.output_fields()
+
+    self.convert_data_by_detault()
+
+class ShiTouJinRong(BasePlatform):
+  platform_name = "石投金融"
+
+  def get_request(self, index):
+    url = 'http://www.shitou.com/website/loadLoanProList'
+    values = {'page' : index,
+        'timeLimit' : '-1',
+        'repType' : '-1',
+        'status' : '-1',
+        'rows' : '5'}
+    data = urllib.urlencode(values)
+    return urllib2.Request(url, data)
+
+  def get_biaos(self, raw_data):
+    return raw_data.split('"loanListShow-li"')[1:]
+ 
+  def fill_fields(self, raw_biao, raw_datas):
+    # debug_output(raw_datas)
+    self.link = 'http://www.shitou.com' + get_link(raw_biao, sep = "'")
+    self.name = raw_datas[14]
+    self.total_money = raw_datas[34]
+    self.year_rate = raw_datas[26]
+    self.duration = raw_datas[30]
+    self.prograss = raw_datas[52]
+
+    self.output_fields()
+
+    self.total_money = get_float(self.total_money)
+    self.duration = int(get_float(self.duration)) * 30
+    self.year_rate = get_float(self.year_rate)
+    self.prograss = get_float(self.prograss)
+    self.for_new_member = self.name.find('新手') != -1
+    self.available_money = get_available_money(self.total_money, self.prograss)
+
 class EDai365(BasePlatform):
   platform_name = "365易贷"
 
@@ -112,7 +241,7 @@ class EDai365(BasePlatform):
     return raw_data.split("biaoname")[1:]
  
   def fill_fields(self, raw_biao, raw_datas):
-    self.link = 'http://www.365edai.cn' + get_first_link(raw_biao)
+    self.link = 'http://www.365edai.cn' + get_link(raw_biao)
     self.name = raw_datas[1]
     self.total_money = raw_datas[15]
     self.year_rate = raw_datas[19]
@@ -181,6 +310,9 @@ class GuoChengJinRong():
       index += 1
     print("GuoChengJinRong Done ...")
 
+    self.platform.last_update_time = timezone.now()
+    self.platform.save()
+
   def _get(self, index):
     has_item = False
     print("Page : %d" % index)
@@ -247,6 +379,9 @@ class XueShanDai(object):
       index += 1
     print("XueShanDai Done ...")
 
+    self.platform.last_update_time = timezone.now()
+    self.platform.save()
+
   def _get(self, index):
     has_item = False
     print("Page : %d" % index)
@@ -267,7 +402,7 @@ class XueShanDai(object):
       duration = datas[63]
       duration_type = datas[64]
       prograss = datas[74]
-      link = 'http://www.xueshandai.com' + get_first_link(raw_biao)
+      link = 'http://www.xueshandai.com' + get_link(raw_biao)
 
       print '----------------------------'
       print('name : %s' % name)
@@ -309,6 +444,9 @@ class HeShiDai():
       index += 1
     print("HeShiDai Done ...")
 
+    self.platform.last_update_time = timezone.now()
+    self.platform.save()
+
   def _get(self, index):
     has_item = False
     print("Page : %d" % index)
@@ -334,7 +472,7 @@ class HeShiDai():
       year_rate = datas[18 + delta]
       prograss = datas[29 + delta]
 
-      link = get_first_link(raw_biao)
+      link = get_link(raw_biao)
 
       print '----------------------------'
       print('name : %s' % name)

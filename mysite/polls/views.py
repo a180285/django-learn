@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.core.urlresolvers import reverse
-from .models import Choice, Question, Loan
+from .models import Choice, Question, Loan, Platform
 from django.views import generic
 from django.utils import timezone
 
@@ -57,4 +57,10 @@ from django_tables2   import RequestConfig
 def table(request):
     table = LoanTable(Loan.objects.all())
     RequestConfig(request).configure(table)
-    return render(request, 'polls/table.html', {'table': table})
+
+    platforms = Platform.objects.all().order_by('-last_update_time')
+
+    content = {'table': table,
+        'platforms': platforms}
+
+    return render(request, 'polls/table.html', content)

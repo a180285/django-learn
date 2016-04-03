@@ -30,6 +30,7 @@ class Choice(models.Model):
 @python_2_unicode_compatible
 class Platform(models.Model):
   name = models.CharField(max_length = 128, unique = True)
+  last_update_time = models.DateTimeField(default = timezone.now)
 
   def __str__(self):
     return self.name

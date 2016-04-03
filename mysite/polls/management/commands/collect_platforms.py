@@ -5,6 +5,8 @@ from financial.models import AccountRecord
 
 from ._private import *
 
+import traceback
+
 class Command(BaseCommand):
   help = 'Running for cron-job'
 
@@ -13,11 +15,17 @@ class Command(BaseCommand):
         GuoChengJinRong(), 
         XueShanDai(),
         YiQiHao(),
+        ShiTouJinRong(),
+        ChengHuiTong(),
+        NoNoBank(),
         HeShiDai()]
 
-    # platforms = [YiQiHao()]
+    # platforms = [NoNoBank()]
 
     for p in platforms:
-      p.run()
+      try:
+        p.run()
+      except Exception, e:
+        print traceback.format_exc()
 
     self.stdout.write(self.style.SUCCESS('Successfully run the job '))

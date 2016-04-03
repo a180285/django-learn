@@ -9,5 +9,19 @@
     </head>
     <body>
       {% render_table table %}
+
+      <table class="paleblue platform-table">
+        <tr>
+          <th>平台</th>
+          <th>最后更新</th>
+        </tr>
+      {% for platform in platforms %}
+        <tr>
+          <td> {{ platform }} </td>
+          <td> {{ platform.last_update_time | date:"Y-m-d G:i" }} </td>
+        </tr>
+      {% endfor %}
+      </table>
+
     </body>
 </html>

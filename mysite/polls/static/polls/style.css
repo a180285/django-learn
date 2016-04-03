@@ -6,6 +6,10 @@ body {
   background: white url("images/small-fundraising-heart.png") no-repeat right bottom;
 }
 
+div.table-container {
+  float: left;
+}
+
 table.paleblue td, table.paleblue th {
   text-align: right;
 }
@@ -31,4 +35,9 @@ table.paleblue > tbody > tr > td > a {
     width: 150px;
     text-overflow: ellipsis; 
     white-space: nowrap;
+}
+
+table.platform-table {
+  float: left;
+  margin-left: 10px;
 }
