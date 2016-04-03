@@ -35,6 +35,11 @@ def get_json(json_datas, key):
 def get_available_money(total_money, prograss):
   return get_float(total_money) * (100 - get_float(prograss)) / 100
 
+def encode_json(json):
+  for key in json:
+    if json[key]:
+      json[key] = json[key].encode('utf-8')
+
 class BasePlatform():
   platform_name = None
   platform = None
@@ -98,14 +103,14 @@ class BasePlatform():
 
   def output_fields(self):
     print('----------------------------')
-    print(u"name : %s" % self.name)
-    print(u"total_money : %s" % self.total_money)
-    print(u"duration : %s" % self.duration)
-    print(u"year_rate : %s" % self.year_rate)
-    print(u"prograss : %s" % self.prograss)
-    print(u"available_money : %s" % self.available_money)
-    print(u"for_new_member : %s" % self.for_new_member)
-    print(u"link : %s" % self.link)
+    print("name : %s" % self.name)
+    print("total_money : %s" % self.total_money)
+    print("duration : %s" % self.duration)
+    print("year_rate : %s" % self.year_rate)
+    print("prograss : %s" % self.prograss)
+    print("available_money : %s" % self.available_money)
+    print("for_new_member : %s" % self.for_new_member)
+    print("link : %s" % self.link)
 
   def convert_data_by_detault(self):
     self.total_money = get_float(self.total_money)
@@ -139,6 +144,9 @@ class NoNoBank(BasePlatform):
  
   def fill_fields(self, json, raw_datas):
     # debug_output(raw_datas)
+
+    encode_json(json)
+
     self.link = 'https://www.nonobank.com/Licai/FinancePlan/' + json['fp_id']
     self.name = json['fp_title']
 
@@ -147,7 +155,7 @@ class NoNoBank(BasePlatform):
     self.duration = json['fp_expect']
     self.prograss = json['fp_percent']
     self.available_money = None
-    self.for_new_member = self.name.find(u'新客体验') != -1
+    self.for_new_member = self.name.find('新客体验') != -1
 
     self.output_fields()
 
