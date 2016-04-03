@@ -98,14 +98,14 @@ class BasePlatform():
 
   def output_fields(self):
     print('----------------------------')
-    print("name : %s" % self.name)
-    print("total_money : %s" % self.total_money)
-    print("duration : %s" % self.duration)
-    print("year_rate : %s" % self.year_rate)
-    print("prograss : %s" % self.prograss)
-    print("available_money : %s" % self.available_money)
-    print("for_new_member : %s" % self.for_new_member)
-    print("link : %s" % self.link)
+    print(u"name : %s" % self.name)
+    print(u"total_money : %s" % self.total_money)
+    print(u"duration : %s" % self.duration)
+    print(u"year_rate : %s" % self.year_rate)
+    print(u"prograss : %s" % self.prograss)
+    print(u"available_money : %s" % self.available_money)
+    print(u"for_new_member : %s" % self.for_new_member)
+    print(u"link : %s" % self.link)
 
   def convert_data_by_detault(self):
     self.total_money = get_float(self.total_money)
