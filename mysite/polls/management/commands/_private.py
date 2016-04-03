@@ -122,6 +122,72 @@ class BasePlatform():
       self.prograss = get_float(self.prograss)
       self.available_money = get_available_money(self.total_money, self.prograss)
 
+class HuRongBao(BasePlatform):
+  platform_name = "互融宝"
+
+  def get_request(self, index):
+    url = 'https://www.hurbao.com/invests?p=%s' % index
+    values = {}
+    data = urllib.urlencode(values)
+    headers = {}
+    return urllib2.Request(url, data, headers)
+
+  def get_biaos(self, raw_data):
+    return raw_data.split('class="content_list_product"')[1:]
+ 
+  def fill_fields(self, raw_biao, raw_datas):
+    # debug_output(raw_datas)
+    # self.for_new_member = raw_biao.find('xinuser_ioc.png') != -1
+    self.link = 'https://www.hurbao.com' + get_link(raw_biao)
+
+    self.name = raw_datas[6]
+    delta = 0
+    if raw_datas[18]:
+      delta = -3
+    self.available_money = raw_datas[65 + delta]
+    self.total_money = raw_datas[21 + delta]
+    self.year_rate = raw_datas[32 + delta]
+    self.duration = raw_datas[44 + delta]
+    # self.prograss = raw_datas[52]
+
+    self.output_fields()
+    year_rate = 0
+    for rate in self.year_rate.split('+'):
+      year_rate += get_float(rate)
+    self.year_rate = year_rate
+
+    self.convert_data_by_detault()
+
+class AnJieCaiFu(BasePlatform):
+  platform_name = "安捷财富"
+
+  def get_request(self, index):
+    url = 'http://www.haoinvest.com/invest/hot/p/%s.html' % index
+    values = {}
+    data = urllib.urlencode(values)
+    return urllib2.Request(url, data)
+
+  def get_biaos(self, raw_data):
+    return raw_data.split('class="tz_project_j_l"')[1:]
+ 
+  def fill_fields(self, raw_biao, raw_datas):
+    # debug_output(raw_datas)
+    self.for_new_member = raw_biao.find('xinuser_ioc.png') != -1
+    self.link = 'http://www.haoinvest.com' + get_link(raw_biao)
+
+    delta = 0
+    if self.for_new_member:
+      delta = 3
+    self.name = raw_datas[5 + delta]
+    self.available_money = raw_datas[16 + delta]
+    self.total_money = raw_datas[17 + delta]
+    self.year_rate = raw_datas[23 + delta]
+    self.duration = raw_datas[31 + delta]
+    # self.prograss = raw_datas[52]
+
+    self.output_fields()
+    self.convert_data_by_detault()
+
 class NoNoBank(BasePlatform):
   platform_name = "诺诺镑客"
   is_json_format = True

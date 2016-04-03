@@ -18,9 +18,11 @@ class Command(BaseCommand):
         ShiTouJinRong(),
         ChengHuiTong(),
         NoNoBank(),
+        AnJieCaiFu(),
+        HuRongBao(),
         HeShiDai()]
 
-    # platforms = [NoNoBank()]
+    # platforms = [HuRongBao()]
 
     for p in platforms:
       try:
