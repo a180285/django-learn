@@ -20,7 +20,7 @@ class Command(BaseCommand):
         NoNoBank(),
         HeShiDai()]
 
-    platforms = [NoNoBank()]
+    # platforms = [NoNoBank()]
 
     for p in platforms:
       try:
