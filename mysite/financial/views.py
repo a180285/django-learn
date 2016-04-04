@@ -26,7 +26,7 @@ from django.views.generic import View
 from django.views.generic.dates import DateMixin
 
 class GenericDateView(DateMixin):
-  date_field = '%Y-%m-%d'
+  date_field = '%m-%d'
 
   def _format_date(self, date):
     return date.strftime(self.get_date_field())
