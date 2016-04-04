@@ -120,7 +120,7 @@ class EditRecord(OwnerRequiredView):
 
   def _response(self, account_id, form):
     account = UserAccount.objects.get(pk = account_id)
-    records = AccountRecord.objects.filter(account_id = account_id)
+    records = AccountRecord.objects.filter(account_id = account_id).order_by('date')
     context = {
       "account_name": account.name,
       'record_list': records,
