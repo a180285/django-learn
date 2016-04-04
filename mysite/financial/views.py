@@ -142,7 +142,7 @@ class CashFlowView(OwnerRequiredView, GenericDateView):
     cash_flow_daily = {}
     money_left = 0
     today = date.today()
-    for i in xrange(-7,28):
+    for i in xrange(-1,28):
       day = today + timezone.timedelta(days = i)
       while self._has_cash_flow_before(cash_flows, day):
         cash_flow = cash_flows.pop(0)
