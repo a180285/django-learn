@@ -122,11 +122,44 @@ class BasePlatform():
     self.total_money = get_float(self.total_money)
     self.year_rate = get_float(self.year_rate)
     self.duration = int(get_float(self.duration)) * 30
-    if self.available_money:
+    if self.available_money and not self.prograss:
       self.available_money = get_float(self.available_money)
     else:
       self.prograss = get_float(self.prograss)
       self.available_money = get_available_money(self.total_money, self.prograss)
+
+class NiWoDai(BasePlatform):
+  platform_name = "你我贷"
+  platform_link = 'http://www.niwodai.com/'
+
+  def get_request(self, index):
+    url = 'https://member.niwodai.com/loan/loan.do?totalCount=54&pageNo=%s' % index
+    values = {}
+    data = urllib.urlencode(values)
+    headers = {}
+    return urllib2.Request(url, data, headers)
+
+  def get_biaos(self, raw_data):
+    return raw_data.split('class="mb_10 item_out"')[1:]
+ 
+  def fill_fields(self, raw_biao, raw_datas):
+    # debug_output(raw_datas)
+    # self.for_new_member = raw_biao.find('xinuser_ioc.png') != -1
+    self.link = 'https://www.niwodai.com' + get_link(raw_biao)
+
+    self.name = raw_datas[13]
+    delta = 0
+    # if raw_datas[18]:
+    #   delta = -3
+    # self.available_money = raw_datas[65 + delta]
+    self.total_money = raw_datas[46 + delta]
+    self.year_rate = raw_datas[29 + delta]
+    self.duration = raw_datas[37 + delta]
+    self.prograss = raw_datas[3]
+    self.available_money = None
+
+    self.output_fields()
+    self.convert_data_by_detault()
 
 class HuRongBao(BasePlatform):
   platform_name = "互融宝"

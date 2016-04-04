@@ -20,9 +20,10 @@ class Command(BaseCommand):
         NoNoBank(),
         AnJieCaiFu(),
         HuRongBao(),
+        NiWoDai(),
         HeShiDai()]
 
-    # platforms = [EDai365()]
+    # platforms = [NiWoDai()]
 
     for p in platforms:
       try:

@@ -54,19 +54,23 @@ def vote(request, question_id):
 from django.shortcuts import render
 from django_tables2   import RequestConfig
 
-def table(request, min_duration = 0, max_duration = 100):
+def table(request, min_duration = 0, max_duration = 100, platform_id = None):
     min_duration = int(min_duration) * 30
     max_duration = int(max_duration) * 30
 
     loans = Loan.objects.all().filter(duration__gte= min_duration, 
         duration__lte = max_duration)
 
+    if platform_id:
+        loans = loans.filter(platform_id = platform_id)
+
     table = LoanTable(loans)
     RequestConfig(request).configure(table)
 
     platforms = Platform.objects.all().order_by('-last_update_time')
-
+    platforms_by_name = Platform.objects.all().order_by('name')
     content = {'table': table,
-        'platforms': platforms}
+        'platforms': platforms,
+        'platforms_by_name': platforms_by_name}
 
     return render(request, 'polls/table.html', content)

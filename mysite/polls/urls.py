@@ -9,5 +9,6 @@ urlpatterns = [
     # url(r'^(?P<pk>[0-9]+)/results/$', views.ResultsView.as_view(), name='results'),
     # url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
     url(r'^$', views.table, name = 'table'),
+    url(r'^platform-(?P<platform_id>[0-9]+)/$', views.table, name = 'table'),
     url(r'^duration-(?P<min_duration>[0-9]+)-(?P<max_duration>[0-9]+)/$', views.table, name = 'table'),
 ]
