@@ -1,0 +1,18 @@
+<table>
+  <tr>
+    <th>平台</th>
+    <th>标名</th>
+    <th>标的类型</th>
+    <th>期限</th>
+    <th>年化利率</th>
+    <th>可投金额</th>
+  </tr>
+  <tr ng-repeat="loan in loans" >
+    <td> {{ platforms[loan.fields.platform].name }}  </td>
+    <td>  <a target="_blank" href="{{ loan.fields.link }}"> {{ loan.fields.name }} </a> </td>
+    <td> {{ loan.fields.for_new_member }} </td>
+    <td> {{ loan.fields.duration }} </td>
+    <td> {{ loan.fields.year_rate }} </td>
+    <td> {{ loan.fields.available_money }} </td>
+  </tr>
+</table>

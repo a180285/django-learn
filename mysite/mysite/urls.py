@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/login/$', auth_views.login),
     url(r'^p/', include('polls.urls')),
+    url(r'^p2p/', include('p2p.urls')),
 ]

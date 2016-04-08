@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'polls.apps.PollsConfig',
+    'p2p.apps.P2PConfig',
     'financial.apps.FinancialConfig',
     'django_tables2',
 ]

@@ -74,3 +74,12 @@ def table(request, min_duration = 0, max_duration = 100, platform_id = None):
         'platforms_by_name': platforms_by_name}
 
     return render(request, 'polls/table.html', content)
+
+from django.core import serializers
+
+def loans_json(request):
+    return HttpResponse(serializers.serialize("json", Loan.objects.all()))
+
+def platforms_json(request):
+    return HttpResponse(serializers.serialize("json", Platform.objects.all()))
+    

@@ -11,4 +11,6 @@ urlpatterns = [
     url(r'^$', views.table, name = 'table'),
     url(r'^platform-(?P<platform_id>[0-9]+)/$', views.table, name = 'table'),
     url(r'^duration-(?P<min_duration>[0-9]+)-(?P<max_duration>[0-9]+)/$', views.table, name = 'table'),
+    url(r'^loans-json/$', views.loans_json, name = 'loans-json'),
+    url(r'^platforms-json/$', views.platforms_json, name = 'platforms-json'),
 ]

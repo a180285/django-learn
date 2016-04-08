@@ -1,0 +1,12 @@
+{% load staticfiles %}
+<html ng-app="p2pApp">
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+    <script src="{% static 'p2p/js/controllers.js' %} "></script>
+  </head>
+  <body>
+    <div ng-controller="P2pController">
+      <div p2p-container></div>
+    </div>
+  </body>
+</html>
