@@ -101,11 +101,13 @@ class DeleteAccount(OwnerRequiredView):
     return HttpResponseRedirect(reverse('financial:user_home_page', args= ()))
 
 class EditRecord(OwnerRequiredView):
-  def get(self, request, account_id):
+  def get(self, request, account_id, last_edit_date = None):
     form = RecordForm
+    if last_edit_date:
+      form = RecordForm(initial = {'date': last_edit_date})
     return self._response(account_id, form)
 
-  def post(self, request, account_id):
+  def post(self, request, account_id, last_edit_date = None):
     form = RecordForm(request.POST)
     if form.is_valid():
       record = form.save(commit = False)
@@ -114,7 +116,7 @@ class EditRecord(OwnerRequiredView):
       record.save()
 
       last_edit_date = form['date'].value()
-      form = RecordForm(initial = {'date': last_edit_date})
+      return HttpResponseRedirect(reverse('financial:updated_record', args = (account_id, last_edit_date)))
 
     return self._response(account_id, form)
 

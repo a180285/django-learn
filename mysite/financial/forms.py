@@ -10,7 +10,7 @@ class UserAccountForm(forms.ModelForm):
 class RecordForm(forms.ModelForm):
   class Meta:
     model = models.AccountRecord
-    fields = ['date', 'money']
+    fields = ['date', 'money', 'comment']
     widgets = {
       'date': forms.DateInput(attrs={'type': 'date'}),
     }

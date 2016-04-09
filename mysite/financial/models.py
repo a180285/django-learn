@@ -6,7 +6,7 @@ from datetime import date
 
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import User
-
+  
 # Create your models here.
 
 @python_2_unicode_compatible
@@ -31,6 +31,7 @@ class AccountRecord(models.Model):
   days = models.IntegerField(null = True)
   months = models.IntegerField(null = True)
   quarters = models.IntegerField(null = True)
+  comment = models.CharField(max_length = 128, default = '', blank = True)
 
   def __str__(self):
     return "%s (%s): %s" % (self.account, self.date, self.money)

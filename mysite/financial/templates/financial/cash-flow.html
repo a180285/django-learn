@@ -67,12 +67,14 @@ $(function () {
     <th>Account</th>
     <th>Date</th>
     <th>Money</th>
+    <th>Comment</th>
   </tr>
 {% for cash_flow in cash_flows %}
   <tr>
     <td> {{ cash_flow.account_record.account.name }} </td>
     <td> {{ cash_flow.date | date:"Y-m-d" }} </td>
     <td> {{ cash_flow.money }} </td>
+    <td> {{ cash_flow.account_record.comment }} </td>
   </tr>
 {% endfor %}
 </table>
