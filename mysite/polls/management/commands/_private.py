@@ -11,6 +11,7 @@ import urllib2, urllib
 import re
 
 import simplejson
+import subprocess
 
 def split_by_tag(raw_data_str):
   return [raw_data.split('<')[0].strip() for raw_data in raw_data_str.split('>')]
@@ -74,14 +75,17 @@ class BasePlatform():
     self.platform.last_update_time = timezone.now()
     self.platform.save()
 
+  def get_data_by_url(self, req):
+    return urllib2.urlopen(req).read()
+
   def get(self, index):
     has_item = False
     req = self.get_request(index)
-    print("Page : %s" % index)
-    print("Url : %s" % req.get_full_url())
-    print("Request data : %s" % req.get_data())
+    print("--------------> Page : %s" % index)
+    print("--------------> Url : %s" % req.get_full_url())
+    print("--------------> Request data : %s" % req.get_data())
 
-    data = urllib2.urlopen(req).read()
+    data = self.get_data_by_url(req)
     biaos = self.get_biaos(data)
     biaos = filter(self.filter_func, biaos)
     for raw_biao in biaos:
@@ -121,12 +125,88 @@ class BasePlatform():
   def convert_data_by_detault(self):
     self.total_money = get_float(self.total_money)
     self.year_rate = get_float(self.year_rate)
-    self.duration = int(get_float(self.duration)) * 30
+
+    duration = int(get_float(self.duration))
+    duration_type = 30
+    if self.duration.find('天') != -1:
+      duration_type = 1
+    self.duration = duration * duration_type
+
     if self.available_money and not self.prograss:
       self.available_money = get_float(self.available_money)
     else:
       self.prograss = get_float(self.prograss)
       self.available_money = get_available_money(self.total_money, self.prograss)
+ 
+class WeiDai(BasePlatform):
+  platform_name = "微贷网"
+  platform_link = 'https://www.weidai.com.cn/index.html'
+
+  def get_request(self, index):
+    url = 'https://www.weidai.com.cn/bid/tenderList?cach=0.7439816089001547&typeCondition=other&isNewBorrow=0&isDirection=0&startBetweenMonth=0&endBetweenMonth=0&searchFlag=search&month=allMonth&page=%s&rows=10&credit=-1' % index
+    values = {}
+    data = urllib.urlencode(values)
+    headers = {}
+    return urllib2.Request(url, data, headers)
+
+  def get_biaos(self, raw_data):
+    return raw_data.split("<ul class='storeTitle storeObject'>")[1:]
+ 
+  def fill_fields(self, raw_biao, raw_datas):
+    # debug_output(raw_datas[:100])
+    delta = 0
+    # # self.for_new_member = raw_biao.find('xinuser_ioc.png') != -1
+    self.link = 'https://www.weidai.com.cn' + get_link(raw_biao)
+
+    for index in xrange(4,14):
+      if raw_datas[index]:
+        delta = index - 7
+        break
+
+    self.name = raw_datas[3] + raw_datas[7 + delta]
+    self.total_money = raw_datas[14 + delta]
+    self.year_rate = raw_datas[10 + delta]
+    self.duration = raw_datas[12 + delta]
+    self.prograss = raw_datas[21 + delta]
+    self.available_money = None
+
+    self.output_fields()
+    self.convert_data_by_detault()
+
+class PaiPaiDai(BasePlatform):
+  platform_name = "拍拍贷"
+  platform_link = 'http://www.ppdai.com/'
+
+  def get_request(self, index):
+    url = 'http://invest.ppdai.com/loan/list_safe_s0_p%s?Rate=0' % index
+    values = {}
+    data = urllib.urlencode(values)
+    headers = {}
+    return urllib2.Request(url, data, headers)
+
+  def get_biaos(self, raw_data):
+    return raw_data.split('<ol class="clearfix">')[1:]
+ 
+  def fill_fields(self, raw_biao, raw_datas):
+    # debug_output(raw_datas[:100])
+    delta = 0
+    # self.for_new_member = raw_biao.find('xinuser_ioc.png') != -1
+    self.link = get_link(raw_biao, index = 2)
+
+    self.name = raw_datas[9]
+    for index in xrange(22,35):
+      if raw_datas[index]:
+        delta = index - 24
+        break
+    # # self.available_money = raw_datas[65 + delta]
+    self.total_money = raw_datas[30 + delta]
+    self.year_rate = raw_datas[24 + delta]
+    self.duration = raw_datas[32 + delta]
+    self.prograss = raw_datas[42 + delta]
+    self.available_money = None
+
+    self.output_fields()
+    self.convert_data_by_detault()
 
 class NiWoDai(BasePlatform):
   platform_name = "你我贷"
@@ -175,8 +255,11 @@ class HuRongBao(BasePlatform):
   def get_biaos(self, raw_data):
     return raw_data.split('class="content_list_product"')[1:]
  
+  def filter_func(self, raw_biao):
+    return raw_biao.find("即将开抢") == -1
+
   def fill_fields(self, raw_biao, raw_datas):
-    # debug_output(raw_datas)
+    # debug_output(raw_datas[:100])
     # self.for_new_member = raw_biao.find('xinuser_ioc.png') != -1
     self.link = 'https://www.hurbao.com' + get_link(raw_biao)
 

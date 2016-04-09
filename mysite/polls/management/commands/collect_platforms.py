@@ -11,24 +11,32 @@ class Command(BaseCommand):
   help = 'Running for cron-job'
 
   def handle(self, *args, **options):
-    platforms = [EDai365(), 
-        GuoChengJinRong(), 
-        XueShanDai(),
-        YiQiHao(),
-        ShiTouJinRong(),
-        ChengHuiTong(),
-        NoNoBank(),
+    platforms = [
         AnJieCaiFu(),
+        ChengHuiTong(),
+        EDai365(), 
+        GuoChengJinRong(), 
+        HeShiDai(),
         HuRongBao(),
         NiWoDai(),
-        HeShiDai()]
+        NoNoBank(),
+        PaiPaiDai(),
+        ShiTouJinRong(),
+        WeiDai(),
+        XueShanDai(),
+        YiQiHao(),
+    ]
 
-    # platforms = [NiWoDai()]
+    # platforms = [HuRongBao()]
 
     for p in platforms:
       try:
         p.run()
       except Exception, e:
         print traceback.format_exc()
+        # return
 
     self.stdout.write(self.style.SUCCESS('Successfully run the job '))
+
+# 点融网：没有什么可投标
+# 开鑫贷：利率低，标少
