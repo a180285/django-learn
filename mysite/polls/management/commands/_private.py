@@ -346,7 +346,7 @@ class NoNoBank(BasePlatform):
     self.duration = json['fp_expect']
     self.prograss = json['fp_percent']
     self.available_money = None
-    self.for_new_member = self.name.find('新客体验') != -1
+    self.for_new_member = self.name.find('新客') != -1
 
     self.output_fields()
 
