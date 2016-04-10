@@ -1,18 +1,55 @@
 <table>
   <tr>
     <th>平台</th>
-    <th>标名</th>
-    <th>标的类型</th>
-    <th>期限</th>
-    <th>年化利率</th>
-    <th>可投金额</th>
+    <th>最后更新</th>
   </tr>
-  <tr ng-repeat="loan in loans" >
-    <td> {{ platforms[loan.fields.platform].name }}  </td>
-    <td>  <a target="_blank" href="{{ loan.fields.link }}"> {{ loan.fields.name }} </a> </td>
-    <td> {{ loan.fields.for_new_member }} </td>
-    <td> {{ loan.fields.duration }} </td>
-    <td> {{ loan.fields.year_rate }} </td>
-    <td> {{ loan.fields.available_money }} </td>
+  <tr ng-repeat="platform in platformsArray | orderBy:'-fields.last_update_time'">
+    <td> {{ platform.fields.name }} </td>
+    <td> {{ platform.fields.last_update_time | date:"yyyy-M-d HH:mm" }} </td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <th class='platform-name' 
+        ng-click="order('fields.platform')">
+    <div>
+      平台
+      <span class="sortorder" ng-show="predicate === 'fields.platform'" ng-class="{reverse:reverse}"></span>
+    </div>
+    </th>
+    <th class="loan-name" 
+        ng-click="order('fields.name')">
+      标名
+      <span class="sortorder" ng-show="predicate === 'fields.name'" ng-class="{reverse:reverse}"></span>
+    </th>
+    <th class="for_new_member" 
+        ng-click="order('fields.for_new_member')">
+      标的类型
+      <span class="sortorder" ng-show="predicate === 'fields.for_new_member'" ng-class="{reverse:reverse}"></span>
+    </th>
+    <th class="duration" 
+        ng-click="order('fields.duration')">
+      期限
+      <span class="sortorder" ng-show="predicate === 'fields.duration'" ng-class="{reverse:reverse}"></span>
+    </th>
+    <th class="year_rate" 
+        ng-click="order('fields.year_rate')">
+      年化利率
+      <span class="sortorder" ng-show="predicate === 'fields.year_rate'" ng-class="{reverse:reverse}"></span>
+    </th>
+    <th 'available_money'
+        ng-click="order('fields.available_money')">
+      可投金额
+      <span class="sortorder" ng-show="predicate === 'fields.available_money'" ng-class="{reverse:reverse}"></span>
+    </th>
+  </tr>
+  <tr ng-repeat="loan in loans" ng-class-odd="'odd'" ng-class-even="'even'">
+    <td class='platform-name' > {{ platforms[loan.fields.platform].name }}  </td>
+    <td class="loan-name">  <a target="_blank" href="{{ loan.fields.link }}"> {{ loan.fields.name }} </a> </td>
+    <td class="for-new-member"> {{ loan.fields.for_new_member }} </td>
+    <td class="duration"> {{ loan.fields.duration }} </td>
+    <td class="year-rate"> {{ loan.fields.year_rate }} % </td>
+    <td class="available-money"> {{ loan.fields.available_money | number }} </td>
   </tr>
 </table>
