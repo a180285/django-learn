@@ -27,7 +27,7 @@ class Command(BaseCommand):
         YiQiHao(),
     ]
 
-    platforms = [PaiPaiDai()]
+    # platforms = [PaiPaiDai()]
 
     for p in platforms:
       try:
