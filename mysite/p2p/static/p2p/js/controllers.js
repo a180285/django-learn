@@ -1,4 +1,4 @@
-var p2pApp = angular.module('p2pApp', []);
+var p2pApp = angular.module('p2pApp', ['p2pFilters']);
 
 p2pApp.controller('P2pController', function ($scope, $http, $filter) {
   var orderBy = $filter('orderBy');
@@ -24,6 +24,10 @@ p2pApp.controller('P2pController', function ($scope, $http, $filter) {
     $scope.predicate = predicate;
     $scope.loans = orderBy($scope.loans, predicate, $scope.reverse);
   };
+
+  $scope.notForNewMember = function(value, index, array) {
+    return !value.fields.for_new_member;
+  }
 
 })
 .directive('p2pContainer', function() {
