@@ -194,7 +194,7 @@ class PaiPaiDai(BasePlatform):
     self.link = get_link(raw_biao, index = 2)
 
     self.name = raw_datas[9]
-    for index in xrange(22,35):
+    for index in xrange(18,35):
       if raw_datas[index]:
         delta = index - 24
         break
