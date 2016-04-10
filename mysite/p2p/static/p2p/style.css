@@ -12,12 +12,12 @@ body {
   border-left: 1px solid #DDD;
 }
 
-th {
-  background-color: #EEF;
+table.platforms {
+  float: right;
 }
 
-th.sorted {
-  background-color: #CCE;
+th.sortable {
+  background-color: #EEF;
 }
 
 td {
@@ -54,6 +54,15 @@ table tr.even {
   background-color: #EDF3FE;
 }
 
+th {
+  border: #000000 solid 1px;
+}
+
+th.sortable:hover {
+  cursor: pointer;
+  color: #EEF;
+  background-color: #000000;
+}
 
 .platform-name {
   width: 80px;
@@ -71,22 +80,9 @@ table tr.even {
   white-space: nowrap;
 }
 
-.for-new-member {
+.duration, .for-new-member, .year-rate, .available-money {
   width: 80px;
 }
-
-.duration {
-  width: 80px;
-}
-
-.year-rate {
-  width: 80px;
-}
-
-.available-money {
-  width: 80px;
-}
-
 
 .sortorder {
   /*position: absolute;*/

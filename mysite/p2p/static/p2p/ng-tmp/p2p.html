@@ -1,4 +1,4 @@
-<table>
+<table class="platforms">
   <tr>
     <th>平台</th>
     <th>最后更新</th>
@@ -11,34 +11,32 @@
 
 <table>
   <tr>
-    <th class='platform-name' 
+    <th class='platform-name sortable'
         ng-click="order('fields.platform')">
-    <div>
       平台
       <span class="sortorder" ng-show="predicate === 'fields.platform'" ng-class="{reverse:reverse}"></span>
-    </div>
     </th>
-    <th class="loan-name" 
+    <th class="loan-name sortable"
         ng-click="order('fields.name')">
       标名
       <span class="sortorder" ng-show="predicate === 'fields.name'" ng-class="{reverse:reverse}"></span>
     </th>
-    <th class="for_new_member" 
+    <th class="for-new-member sortable"
         ng-click="order('fields.for_new_member')">
       标的类型
       <span class="sortorder" ng-show="predicate === 'fields.for_new_member'" ng-class="{reverse:reverse}"></span>
     </th>
-    <th class="duration" 
+    <th class="duration sortable"
         ng-click="order('fields.duration')">
       期限
       <span class="sortorder" ng-show="predicate === 'fields.duration'" ng-class="{reverse:reverse}"></span>
     </th>
-    <th class="year_rate" 
+    <th class="year-rate sortable"
         ng-click="order('fields.year_rate')">
       年化利率
       <span class="sortorder" ng-show="predicate === 'fields.year_rate'" ng-class="{reverse:reverse}"></span>
     </th>
-    <th 'available_money'
+    <th class='available-money sortable'
         ng-click="order('fields.available_money')">
       可投金额
       <span class="sortorder" ng-show="predicate === 'fields.available_money'" ng-class="{reverse:reverse}"></span>
@@ -50,6 +48,6 @@
     <td class="for-new-member"> {{ loan.fields.for_new_member }} </td>
     <td class="duration"> {{ loan.fields.duration }} </td>
     <td class="year-rate"> {{ loan.fields.year_rate }} % </td>
-    <td class="available-money"> {{ loan.fields.available_money | number }} </td>
+    <td class="available-money"> {{ loan.fields.available_money | number:0 }} </td>
   </tr>
 </table>
