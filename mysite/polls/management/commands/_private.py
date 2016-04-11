@@ -38,7 +38,7 @@ def get_available_money(total_money, prograss):
 
 def encode_json(json):
   for key in json:
-    if json[key] and type(json[key]) == str:
+    if json[key] and type(json[key]) != int:
       json[key] = json[key].encode('utf-8')
 
 class BasePlatform():
@@ -70,6 +70,7 @@ class BasePlatform():
     index = 1
     while self.get(index):
       index += 1
+      break
 
     print("%s Done ..." % self.platform_name)
     self.platform.last_update_time = timezone.now()
@@ -349,7 +350,7 @@ class NoNoBank(BasePlatform):
     self.duration = json['fp_expect']
     self.prograss = json['fp_percent']
     self.available_money = None
-    self.for_new_member = self.name.find(u'新客') != -1
+    self.for_new_member = self.name.find('新客') != -1
 
     self.output_fields()
 

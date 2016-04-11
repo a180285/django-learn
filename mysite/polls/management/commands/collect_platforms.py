@@ -35,7 +35,7 @@ class Command(BaseCommand):
         p.run()
       except Exception, e:
         print traceback.format_exc()
-        # return
+        return
 
     self.stdout.write(self.style.SUCCESS('Successfully run the job '))
 
