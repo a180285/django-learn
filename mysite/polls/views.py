@@ -6,16 +6,24 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.core.urlresolvers import reverse
-from .models import Choice, Question
+from .models import Choice, Question, Loan, Platform
 from django.views import generic
+from django.utils import timezone
+
+from .tables import LoanTable
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'latest_question_list'
 
     def get_queryset(self):
-        """Return the last five published questions."""
-        return Question.objects.order_by('-pub_date')[:5]
+        """
+        Return the last five published questions (not including those set to be
+        published in the future).
+        """
+        return Question.objects.filter(
+            pub_date__lte=timezone.now()
+        ).order_by('-pub_date')[:5]
 
 class DetailView(generic.DetailView):
     model = Question
@@ -42,3 +50,36 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+from django.shortcuts import render
+from django_tables2   import RequestConfig
+
+def table(request, min_duration = 0, max_duration = 100, platform_id = None):
+    min_duration = int(min_duration) * 30
+    max_duration = int(max_duration) * 30
+
+    loans = Loan.objects.all().filter(duration__gte= min_duration, 
+        duration__lte = max_duration)
+
+    if platform_id:
+        loans = loans.filter(platform_id = platform_id)
+
+    table = LoanTable(loans)
+    RequestConfig(request).configure(table)
+
+    platforms = Platform.objects.all().order_by('-last_update_time')
+    platforms_by_name = Platform.objects.all().order_by('name')
+    content = {'table': table,
+        'platforms': platforms,
+        'platforms_by_name': platforms_by_name}
+
+    return render(request, 'polls/table.html', content)
+
+from django.core import serializers
+
+def loans_json(request):
+    return HttpResponse(serializers.serialize("json", Loan.objects.all()))
+
+def platforms_json(request):
+    return HttpResponse(serializers.serialize("json", Platform.objects.all()))
+    

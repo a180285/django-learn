@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %} 账户管理 {% endblock %}
+
+{% block content %}
+
+<h1> {{ account_name }}</h1>
+
+<form method="post">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+<input type="submit" value="Add Record" />
+</form>
+
+
+<table>
+  <tr>
+    <th>Delete</th>
+    <th>Date</th>
+    <th>Money</th>
+    <th>Comment</th>
+  </tr>
+{% for record in record_list %}
+  <tr id="record_{{ record.id }}">
+    <td> 
+      <button onclick="deleteThenRemove('{% url 'financial:delete_record' record.account_id record.id %}', 
+          'record_{{ record.id }}')" type="button"> 
+        Delete 
+      </button>
+    </td>
+    <td> {{ record.date | date:"Y-m-d" }} </td>
+    <td> {{ record.money }} </td>
+    <td> {{ record.comment }} </td>
+  </tr>
+{% endfor %}
+</table>
+
+{% endblock %}

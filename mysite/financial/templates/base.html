@@ -1,0 +1,71 @@
+{% load staticfiles %}
+<html>
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  <!-- <link rel="stylesheet" type="text/css" href="{% static 'financial/style.css' %}" /> -->
+
+<style type="text/css">
+
+a {
+    color: green;
+}
+
+hr {
+  color: sienna;
+}
+
+p {
+  margin-left: 20px;
+}
+
+input[type="submit"] {
+  width:120px;
+  margin-left:35px;
+  display:block;
+  font-family: Verdana, Arial;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+
+th, td {
+  text-align: right;
+  width: 90px;
+  border: 1px solid #aaa;
+}
+
+th {
+  background-color: #d5d5d5;
+}
+
+td {
+  background-color: #efefef;
+}
+
+</style>
+
+<script src="http://lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js">
+</script>
+
+<script>
+deleteThenRemove = function(url, id) {
+  var confirmDelete = confirm("Do you really want to delete?");
+  if (confirmDelete) {
+    $.get(url);
+    $('#' + id).remove();
+  }
+}
+</script>
+
+</head>
+<body>
+  <a href="{% url 'financial:user_home_page' %}">账户管理</a>
+  <a href="{% url 'financial:cash_flow_page' %}">现金流页面</a>
+
+  <hr/>
+
+  {% block content %}{% endblock %}
+</body>
+</html>

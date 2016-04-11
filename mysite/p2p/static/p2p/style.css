@@ -1,0 +1,100 @@
+body {
+  margin: 0;
+  /*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+  font-size: 14px;
+  line-height: 20px;
+  color: #333333;
+  background-color: #ffffff;
+
+  padding: 5px;
+  /*line-height: 13px;*/
+  border-bottom: 1px solid #EEE;
+  border-left: 1px solid #DDD;
+}
+
+table.platforms {
+  float: right;
+}
+
+th.sortable {
+  background-color: #EEF;
+}
+
+td {
+  text-align: right;
+}
+
+table {
+  border-collapse:collapse;
+}
+
+table, th, td {
+  /*border: 1px solid black;*/
+  padding: 8px 10px;
+  border-bottom: 1px solid #EEE;
+  border-left: 1px solid #DDD;
+  border-right: 1px solid #DDD;
+}
+
+table a:link, table a:visited {
+  color: #5B80B2;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+table a:hover {
+  color: #036;
+}
+
+table tr.odd {
+  background-color: white;
+}
+
+table tr.even {
+  background-color: #EDF3FE;
+}
+
+th {
+  border: #000000 solid 1px;
+}
+
+th.sortable:hover {
+  cursor: pointer;
+  color: #EEF;
+  background-color: #000000;
+}
+
+.platform-name {
+  width: 80px;
+}
+
+.loan-name {
+  width: 11em;
+}
+
+.loan-name > a {
+  display: inline-block;
+  overflow: hidden;
+  width: 10em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.duration, .for-new-member, .year-rate, .available-money {
+  width: 80px;
+}
+
+.sortorder {
+  /*position: absolute;*/
+  right: 0px;
+  font-size: 10px;
+  margin-top: 5px;
+}
+
+.sortorder:after {
+  content: '\25b2';
+}
+
+.sortorder.reverse:after {
+  content: '\25bc';
+}

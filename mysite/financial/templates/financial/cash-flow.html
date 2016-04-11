@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %} 现金流 {% endblock %}
+
+{% block content %}
+
+<script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
+<script>
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'column',
+            margin: [ 50, 50, 100, 80]
+        },
+        title: {
+            text: '现金流'
+        },
+        xAxis: {
+            categories: {{ categories | safe }},
+            labels: {
+                rotation: 0,
+                align: 'right',
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            title: {
+                text: '余额'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            pointFormat: '余额: <b>{point.y:.0f}</b>',
+        },
+        series: [{
+            name: '今天的日志',
+            data: {{ data }},
+            dataLabels: {
+                enabled: false,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                x: 4,
+                y: 10,
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif',
+                    textShadow: '0 0 3px black'
+                }
+            }
+        }]
+    });
+});
+</script>
+<div id="container" style="min-width:700px;height:400px"></div>
+
+
+<table>
+  <tr>
+    <th>Account</th>
+    <th>Date</th>
+    <th>Money</th>
+    <th>Comment</th>
+  </tr>
+{% for cash_flow in cash_flows %}
+  <tr>
+    <td> {{ cash_flow.account_record.account.name }} </td>
+    <td> {{ cash_flow.date | date:"Y-m-d" }} </td>
+    <td> {{ cash_flow.money }} </td>
+    <td> {{ cash_flow.account_record.comment }} </td>
+  </tr>
+{% endfor %}
+</table>
+
+{% endblock %}

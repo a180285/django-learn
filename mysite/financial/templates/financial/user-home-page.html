@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %} 账户管理 {% endblock %}
+
+{% block content %}
+
+<form method="post">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+<input type="submit" value="Add Account" />
+</form>
+
+已经存在的账户：
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Edit</th>
+    <th>Delete</th>
+  </tr>
+{% for account in account_list %}
+  <tr id="account_{{ account.id }}">
+    <td>
+      <a href="{% url 'financial:show_record' account.id %}"> {{ account.name }} </a>
+    </td>
+    <td> 
+      <a href="{% url 'financial:edit_account' account.id %}"> Edit </a>
+    </td>
+    <td> 
+    <button onclick='deleteThenRemove("{% url 'financial:delete_account' account.id %}", 
+        "account_{{ account.id }}")' type="button">
+      Delete 
+    </button>
+    </td>
+  </tr>
+{% endfor %}
+</table>
+
+{% endblock %}

@@ -24,7 +24,7 @@ SECRET_KEY = '+9+@o(n)8d^z+dq0ieqh&v+#1%lc!3k-&%urnmp$-h1j2^9$$+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -36,7 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'polls.apps.PollsConfig',
+    'p2p.apps.P2PConfig',
     'financial.apps.FinancialConfig',
+    'django_tables2',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -115,3 +117,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = '/www/static/'
+
+# LOGIN_URL = '/admin/login/'

@@ -1,0 +1,53 @@
+li a {
+  color: green;
+}
+
+ul > li {
+  display: inline-block;
+  margin-left: 20px;
+}
+
+div.table-container {
+  float: left;
+}
+
+table.paleblue td, table.paleblue th {
+  text-align: right;
+}
+
+table.paleblue td.for_new_member {
+  text-align: left;
+}
+
+table.paleblue > tbody > tr > td > span.true {
+  background-image: url('images/for-new-member-icon.png');
+  height: 18px;
+  width: 64px;
+  background-position: 0px -2px;
+}
+
+table.paleblue > tbody > tr > td > span.false {
+    background-image: url('/static/django_tables2/themes/paleblue/img/true.gif');
+}
+
+table.paleblue > tbody > tr > td > a {
+    display:inline-block;
+    overflow:hidden;
+    width: 150px;
+    text-overflow: ellipsis; 
+    white-space: nowrap;
+}
+
+table.platform-table {
+  float: left;
+  margin-left: 10px;
+  border-collapse: collapse;
+  border-color: #CCC;
+  border: 1px solid #DDD;
+}
+
+a.filter-platform {
+  display: inline-block;
+  width: 50px;
+  text-align: center;
+}
