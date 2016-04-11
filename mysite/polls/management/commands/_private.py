@@ -70,7 +70,6 @@ class BasePlatform():
     index = 1
     while self.get(index):
       index += 1
-      break
 
     print("%s Done ..." % self.platform_name)
     self.platform.last_update_time = timezone.now()
