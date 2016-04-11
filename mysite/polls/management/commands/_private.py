@@ -137,7 +137,7 @@ class BasePlatform():
     else:
       self.prograss = get_float(self.prograss)
       self.available_money = get_available_money(self.total_money, self.prograss)
- 
+
 class WeiDai(BasePlatform):
   platform_name = "微贷网"
   platform_link = 'https://www.weidai.com.cn/index.html'
@@ -151,7 +151,7 @@ class WeiDai(BasePlatform):
 
   def get_biaos(self, raw_data):
     return raw_data.split("<ul class='storeTitle storeObject'>")[1:]
- 
+
   def fill_fields(self, raw_biao, raw_datas):
     # debug_output(raw_datas[:100])
     delta = 0
@@ -186,7 +186,7 @@ class PaiPaiDai(BasePlatform):
 
   def get_biaos(self, raw_data):
     return raw_data.split('<ol class="clearfix">')[1:]
- 
+
   def fill_fields(self, raw_biao, raw_datas):
     # debug_output(raw_datas[:100])
     delta = 0
@@ -221,7 +221,7 @@ class NiWoDai(BasePlatform):
 
   def get_biaos(self, raw_data):
     return raw_data.split('class="mb_10 item_out"')[1:]
- 
+
   def fill_fields(self, raw_biao, raw_datas):
     # debug_output(raw_datas)
     # self.for_new_member = raw_biao.find('xinuser_ioc.png') != -1
@@ -254,7 +254,7 @@ class HuRongBao(BasePlatform):
 
   def get_biaos(self, raw_data):
     return raw_data.split('class="content_list_product"')[1:]
- 
+
   def filter_func(self, raw_biao):
     return raw_biao.find("即将开抢") == -1
 
@@ -293,7 +293,7 @@ class AnJieCaiFu(BasePlatform):
 
   def get_biaos(self, raw_data):
     return raw_data.split('class="tz_project_j_l"')[1:]
- 
+
   def fill_fields(self, raw_biao, raw_datas):
     # debug_output(raw_datas)
     self.for_new_member = raw_biao.find('xinuser_ioc.png') != -1
@@ -332,7 +332,7 @@ class NoNoBank(BasePlatform):
     json = simplejson.loads(raw_data)
 
     return json['members']
- 
+
   def fill_fields(self, json, raw_datas):
     # debug_output(raw_datas)
 
@@ -364,7 +364,7 @@ class ChengHuiTong(BasePlatform):
 
   def get_biaos(self, raw_data):
     return raw_data.split('"invest-list-content-box"')[1:]
- 
+
   def fill_fields(self, raw_biao, raw_datas):
     # debug_output(raw_datas)
     self.link = get_link(raw_biao)
@@ -379,7 +379,6 @@ class ChengHuiTong(BasePlatform):
         self.name = data
         delta = index
         break
-    
 
     self.total_money = raw_datas[delta + 4]
     self.year_rate = raw_datas[delta + 6]
@@ -409,7 +408,7 @@ class ShiTouJinRong(BasePlatform):
 
   def get_biaos(self, raw_data):
     return raw_data.split('"loanListShow-li"')[1:]
- 
+
   def fill_fields(self, raw_biao, raw_datas):
     # debug_output(raw_datas)
     self.link = 'http://www.shitou.com' + get_link(raw_biao, sep = "'")
@@ -441,7 +440,7 @@ class EDai365(BasePlatform):
 
   def get_biaos(self, raw_data):
     return raw_data.split("biaoname")[1:]
- 
+
   def fill_fields(self, raw_biao, raw_datas):
     self.link = 'http://www.365edai.cn' + get_link(raw_biao)
     self.name = raw_datas[1]
@@ -484,7 +483,7 @@ class YiQiHao(BasePlatform):
 
   def get_biaos(self, raw_data):
     return raw_data.split('"lid"')[1:]
- 
+
   def fill_fields(self, raw_biao, raw_datas):
     json_datas = raw_biao.split(',"')
     # debug_output(json_datas)
@@ -508,7 +507,7 @@ class GuoChengJinRong():
     platform_link = 'http://www.gcjr.com/'
     self.platform.link = platform_link
     self.platform.save()
-  
+
   def run(self):
     self.platform.loan_set.all().delete()
     index = 1
@@ -647,6 +646,7 @@ class HeShiDai():
     self.platform = Platform.objects.get_or_create(name = self.platform_name)[0]
     platform_link = 'http://www.heshidai.com/'
     self.platform.link = platform_link
+    self.platform.interest_manage_rate = 10.0
     self.platform.save()
 
   def run(self):
@@ -699,6 +699,8 @@ class HeShiDai():
       duration = int(duration) * 30
       prograss = float(prograss[:-1])
       available_money = total_money * (100 - prograss) / 100
+
+      year_rate = float(year_rate) * (100 - self.platform.interest_manage_rate) / 100
 
       if available_money > 100:
         has_item = True

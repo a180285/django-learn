@@ -14,8 +14,8 @@ class Command(BaseCommand):
     platforms = [
         AnJieCaiFu(),
         ChengHuiTong(),
-        EDai365(), 
-        GuoChengJinRong(), 
+        EDai365(),
+        GuoChengJinRong(),
         HeShiDai(),
         HuRongBao(),
         NiWoDai(),
@@ -27,7 +27,8 @@ class Command(BaseCommand):
         YiQiHao(),
     ]
 
-    # platforms = [PaiPaiDai()]
+    # TODO: Show hint for interest_manage_rate
+    # platforms = [HeShiDai()]
 
     for p in platforms:
       try:
