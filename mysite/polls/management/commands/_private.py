@@ -187,6 +187,9 @@ class PaiPaiDai(BasePlatform):
   def get_biaos(self, raw_data):
     return raw_data.split('<ol class="clearfix">')[1:]
 
+  def filter_func(self, raw_data):
+    return raw_data.find('bidCombination') == -1
+
   def fill_fields(self, raw_biao, raw_datas):
     # debug_output(raw_datas[:100])
     delta = 0
@@ -346,7 +349,7 @@ class NoNoBank(BasePlatform):
     self.duration = json['fp_expect']
     self.prograss = json['fp_percent']
     self.available_money = None
-    self.for_new_member = self.name.find('新客') != -1
+    self.for_new_member = self.name.find(u'新客') != -1
 
     self.output_fields()
 
