@@ -12,7 +12,7 @@
 <div>
   <ul class='nav' ng-init="monthFilter = 'all'">
     <li ng-click='filterMonth(null, null, "all")' ng-class="{clicked: monthFilter=='all'}">所有期限</li>
-    <li ng-click='filterMonth(1, 3, "0-1")' ng-class="{clicked: monthFilter=='0-1'}">1个月以内</li>
+    <li ng-click='filterMonth(0, 1, "0-1")' ng-class="{clicked: monthFilter=='0-1'}">1个月以内</li>
     <li ng-click='filterMonth(1, 3, "1-3")' ng-class="{clicked: monthFilter=='1-3'}">1到3个月</li>
     <li ng-click='filterMonth(3, null, "3-null")' ng-class="{clicked: monthFilter=='3-null'}">3个月以上</li>
   </ul>
