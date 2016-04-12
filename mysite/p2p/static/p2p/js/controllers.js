@@ -2,8 +2,12 @@ var p2pApp = angular.module('p2pApp', ['p2pFilters']);
 
 p2pApp.controller('P2pController', function ($scope, $http, $filter) {
   var orderBy = $filter('orderBy');
+  var filterBy = $filter('filter');
+
+  var rawLoans = [];
 
   $http.get('/p/loans-json/').success(function(data) {
+    rawLoans = data;
     $scope.loans = data;
   });
 
@@ -25,9 +29,13 @@ p2pApp.controller('P2pController', function ($scope, $http, $filter) {
     $scope.loans = orderBy($scope.loans, predicate, $scope.reverse);
   };
 
-  $scope.notForNewMember = function(value, index, array) {
-    return !value.fields.for_new_member;
-  }
+  $scope.filterMonth = function(minMonth = null, maxMonth = null, monthFilter = null) {
+    $scope.monthFilter = monthFilter;
+    $scope.loans = filterBy(rawLoans, function(loan, index, array) {
+      return (minMonth == undefined || loan.fields.duration / 30 >= minMonth)
+          && (maxMonth == undefined || loan.fields.duration / 30 <= maxMonth);
+    });
+  };
 
 })
 .directive('p2pContainer', function() {

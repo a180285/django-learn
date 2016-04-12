@@ -6,7 +6,7 @@ from .models import Loan
 from django_tables2.utils import A  # alias for Accessor
 
 class LoanTable(tables.Table):
-  name = tables.LinkColumn(None, verbose_name="标名", attrs = {'a': {'target':"blank"}}, orderable = False)
+  name = tables.LinkColumn(None, verbose_name="标名", attrs = {'a': {'target':"_blank"}}, orderable = False)
   link = tables.Column(visible = False)
   id = tables.Column(visible = False)
   total_money = tables.Column(visible = False)
