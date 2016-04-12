@@ -57,7 +57,7 @@
       <span class="sortorder" ng-show="predicate === 'fields.available_money'" ng-class="{reverse:reverse}"></span>
     </th>
   </tr>
-  <tr ng-repeat="loan in loans " ng-class-odd="'odd'" ng-class-even="'even'">
+  <tr ng-repeat="loan in loans | orderBy:predicate:reverse" ng-class-odd="'odd'" ng-class-even="'even'">
     <td class='platform-name' > {{ platforms[loan.fields.platform].name }}  </td>
     <td class="loan-name">  <a target="_blank" href="{{ loan.fields.link }}"> {{ loan.fields.name }} </a> </td>
     <td class="for-new-member">

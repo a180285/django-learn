@@ -26,7 +26,6 @@ p2pApp.controller('P2pController', function ($scope, $http, $filter) {
   $scope.order = function(predicate) {
     $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
     $scope.predicate = predicate;
-    $scope.loans = orderBy($scope.loans, predicate, $scope.reverse);
   };
 
   $scope.filterMonth = function(minMonth = null, maxMonth = null, monthFilter = null) {
