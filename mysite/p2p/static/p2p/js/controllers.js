@@ -1,4 +1,4 @@
-var p2pApp = angular.module('p2pApp', ['p2pFilters']);
+var p2pApp = angular.module('p2pApp', ['p2pFilters', 'ngMaterial']);
 
 p2pApp.controller('P2pController', function ($scope, $http, $filter) {
   var orderBy = $filter('orderBy');
