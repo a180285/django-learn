@@ -38,7 +38,7 @@ def get_available_money(total_money, prograss):
 
 def encode_json(json):
   for key in json:
-    if json[key]:
+    if json[key] and type(json[key]) != int:
       json[key] = json[key].encode('utf-8')
 
 class BasePlatform():
@@ -186,6 +186,9 @@ class PaiPaiDai(BasePlatform):
 
   def get_biaos(self, raw_data):
     return raw_data.split('<ol class="clearfix">')[1:]
+
+  def filter_func(self, raw_data):
+    return raw_data.find('bidCombination') == -1
 
   def fill_fields(self, raw_biao, raw_datas):
     # debug_output(raw_datas[:100])
@@ -472,6 +475,7 @@ class EDai365(BasePlatform):
 class YiQiHao(BasePlatform):
   platform_name = "一起好"
   platform_link = 'http://www.yiqihao.com/'
+  is_json_format = True
 
   def get_request(self, index):
     values = {'p' : index,
@@ -482,23 +486,27 @@ class YiQiHao(BasePlatform):
     return urllib2.Request(url, data)
 
   def get_biaos(self, raw_data):
-    return raw_data.split('"lid"')[1:]
+    json = simplejson.loads(raw_data)
+
+    return json['data']['list']
+
+  def filter_func(self, raw_biao):
+    encode_json(raw_biao)
+    return raw_biao['is_vip'] != '8' and raw_biao['statusname'] != u"待发布"
 
   def fill_fields(self, raw_biao, raw_datas):
-    json_datas = raw_biao.split(',"')
-    # debug_output(json_datas)
+    json_datas = raw_datas
 
-    self.link = 'https://www.yiqihao.com/#!detail&id=' + json_datas[0].split('"')[1]
-    self.name = get_json(json_datas, 'title')
-    self.total_money = get_json(json_datas, 'amount')
-    self.year_rate = get_json(json_datas, 'apr')
-    self.prograss = get_json(json_datas, 'progress')
-    self.duration = get_json(json_datas, 'deadline')
-    self.for_new_member = get_json(json_datas, 'is_newbie')
+    self.link = 'https://www.yiqihao.com/#!detail&id=' + json_datas['lid']
+    self.name = json_datas['title']
+    self.total_money = json_datas['amount']
+    self.year_rate = json_datas['apr']
+    self.prograss = json_datas['progress']
+    self.duration = json_datas['deadline']
+    self.for_new_member = json_datas['is_newbie'] == '100'
 
-    self.available_money = get_available_money(self.total_money, self.prograss)
-    self.for_new_member = self.for_new_member == '100'
-    self.duration = get_float(self.duration) * 30
+    self.output_fields()
+    self.convert_data_by_detault()
 
 class GuoChengJinRong():
   def __init__(self):

@@ -64,6 +64,11 @@ th.sortable:hover {
   background-color: #000000;
 }
 
+th.orderedBy {
+  color: #000;
+  background-color: #cdf;
+}
+
 .platform-name {
   width: 80px;
 }
@@ -97,4 +102,23 @@ th.sortable:hover {
 
 .sortorder.reverse:after {
   content: '\25bc';
+}
+
+.nav li {
+  display: inline-block;
+  width: 100px;
+  border: #000000 solid 1px;
+  text-align: center;
+}
+
+.nav li:hover {
+  cursor: pointer;
+  color: #FFF;
+  background-color: #000000;
+}
+
+.nav li.clicked {
+  cursor: pointer;
+  color: #FFF;
+  background-color: #888;
 }

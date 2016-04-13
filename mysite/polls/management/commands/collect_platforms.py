@@ -28,7 +28,7 @@ class Command(BaseCommand):
     ]
 
     # TODO: Show hint for interest_manage_rate
-    # platforms = [HeShiDai()]
+    # platforms = [PaiPaiDai()]
 
     for p in platforms:
       try:

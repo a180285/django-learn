@@ -9,43 +9,60 @@
   </tr>
 </table>
 
+<div>
+  <ul class='nav' ng-init="monthFilter = 'all'">
+    <li ng-click='filterMonth(null, null, "all")' ng-class="{clicked: monthFilter=='all'}">所有期限</li>
+    <li ng-click='filterMonth(0, 1, "0-1")' ng-class="{clicked: monthFilter=='0-1'}">1个月以内</li>
+    <li ng-click='filterMonth(1, 3, "1-3")' ng-class="{clicked: monthFilter=='1-3'}">1到3个月</li>
+    <li ng-click='filterMonth(3, null, "3-null")' ng-class="{clicked: monthFilter=='3-null'}">3个月以上</li>
+  </ul>
+</div>
+
 <table>
   <tr>
     <th class='platform-name sortable'
+        ng-class="{orderedBy: predicate == 'fields.platform'}"
         ng-click="order('fields.platform')">
       平台
       <span class="sortorder" ng-show="predicate === 'fields.platform'" ng-class="{reverse:reverse}"></span>
     </th>
     <th class="loan-name sortable"
+        ng-class="{orderedBy: predicate == 'fields.name'}"
         ng-click="order('fields.name')">
       标名
       <span class="sortorder" ng-show="predicate === 'fields.name'" ng-class="{reverse:reverse}"></span>
     </th>
-<!--     <th class="for-new-member sortable"
+    <th class="for-new-member sortable"
+        ng-class="{orderedBy: predicate == 'fields.for_new_member'}"
         ng-click="order('fields.for_new_member')">
       新手标
       <span class="sortorder" ng-show="predicate === 'fields.for_new_member'" ng-class="{reverse:reverse}"></span>
-    </th> -->
+    </th>
     <th class="duration sortable"
+        ng-class="{orderedBy: predicate == 'fields.duration'}"
         ng-click="order('fields.duration')">
       期限
       <span class="sortorder" ng-show="predicate === 'fields.duration'" ng-class="{reverse:reverse}"></span>
     </th>
     <th class="year-rate sortable"
+        ng-class="{orderedBy: predicate == 'fields.year_rate'}"
         ng-click="order('fields.year_rate')">
       年化利率
       <span class="sortorder" ng-show="predicate === 'fields.year_rate'" ng-class="{reverse:reverse}"></span>
     </th>
     <th class='available-money sortable'
+        ng-class="{orderedBy: predicate == 'fields.available_money'}"
         ng-click="order('fields.available_money')">
       可投金额
       <span class="sortorder" ng-show="predicate === 'fields.available_money'" ng-class="{reverse:reverse}"></span>
     </th>
   </tr>
-  <tr ng-repeat="loan in loans | filter:notForNewMember " ng-class-odd="'odd'" ng-class-even="'even'">
+  <tr ng-repeat="loan in loans | orderBy:predicate:reverse" ng-class-odd="'odd'" ng-class-even="'even'">
     <td class='platform-name' > {{ platforms[loan.fields.platform].name }}  </td>
     <td class="loan-name">  <a target="_blank" href="{{ loan.fields.link }}"> {{ loan.fields.name }} </a> </td>
-    <!-- <td class="for-new-member"> {{ loan.fields.for_new_member }} </td> -->
+    <td class="for-new-member">
+      <img ng-src="/static/polls/images/for-new-member-icon.png" ng-show="loan.fields.for_new_member">
+    </td>
     <td class="duration"> {{ loan.fields.duration | showDuration }} </td>
     <td class="year-rate"> {{ loan.fields.year_rate | number:1 }} % </td>
     <td class="available-money"> {{ loan.fields.available_money | number:0 }} </td>
