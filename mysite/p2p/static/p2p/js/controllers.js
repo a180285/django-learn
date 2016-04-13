@@ -28,11 +28,13 @@ p2pApp.controller('P2pController', function ($scope, $http, $filter) {
     $scope.predicate = predicate;
   };
 
-  $scope.filterMonth = function(minMonth = null, maxMonth = null, monthFilter = null) {
+  $scope.filterMonth = function(minMonth, maxMonth, monthFilter) {
+    minMonth = minMonth == undefined ? 0 : minMonth;
+    maxMonth = maxMonth == undefined ? 1000 : maxMonth;
     $scope.monthFilter = monthFilter;
     $scope.loans = filterBy(rawLoans, function(loan, index, array) {
-      return (minMonth == undefined || loan.fields.duration / 30 >= minMonth)
-          && (maxMonth == undefined || loan.fields.duration / 30 <= maxMonth);
+      return loan.fields.duration / 30 >= minMonth
+          && loan.fields.duration / 30 <= maxMonth;
     });
   };
 
