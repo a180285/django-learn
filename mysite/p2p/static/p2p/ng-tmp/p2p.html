@@ -1,10 +1,22 @@
 <table class="platforms">
   <tr>
-    <th>平台</th>
+    <th>
+      <md-checkbox aria-label="Select All"
+          ng-checked="isAllChecked()"
+          md-indeterminate="isIndeterminate()"
+          ng-click="toggleAll()">
+      平台
+      </md-checkbox>
+    </th>
     <th>最后更新</th>
   </tr>
   <tr ng-repeat="platform in platformsArray | orderBy:'-fields.last_update_time'">
-    <td> {{ platform.fields.name }} </td>
+    <td>
+    <md-checkbox ng-checked="exists($index, selected)"
+        ng-click="toggle($index, selected)">
+      {{ platform.fields.name }}
+    </md-checkbox>
+    </td>
     <td> {{ platform.fields.last_update_time | date:"yyyy-M-d HH:mm" }} </td>
   </tr>
 </table>

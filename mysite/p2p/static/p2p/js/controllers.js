@@ -38,6 +38,39 @@ p2pApp.controller('P2pController', function ($scope, $http, $filter) {
     });
   };
 
+  $scope.selected = [];
+
+  $scope.toggle = function (item, list) {
+    var idx = list.indexOf(item);
+    if (idx > -1) {
+      list.splice(idx, 1);
+    }
+    else {
+      list.push(item);
+    }
+  };
+
+  $scope.exists = function (item, list) {
+    return list.indexOf(item) > -1;
+  };
+
+  $scope.isIndeterminate = function() {
+    return ($scope.selected.length !== 0 &&
+        $scope.selected.length !== $scope.platformsArray.length);
+  };
+
+  $scope.isAllChecked = function() {
+    return $scope.selected.length === $scope.platformsArray.length;
+  };
+
+  $scope.toggleAll = function() {
+    if ($scope.selected.length === $scope.platformsArray.length) {
+      $scope.selected = [];
+    } else if ($scope.selected.length === 0 || $scope.selected.length > 0) {
+      $scope.selected = $scope.platformsArray.slice(0);
+    }
+  };
+
 })
 .directive('p2pContainer', function() {
   return {
