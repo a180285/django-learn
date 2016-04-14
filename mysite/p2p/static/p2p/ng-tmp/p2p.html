@@ -1,7 +1,8 @@
 <table class="platforms">
   <tr>
-    <th>
+    <th class="checkable">
       <md-checkbox aria-label="Select All"
+          class="in-table-check-box"
           ng-checked="isAllChecked()"
           md-indeterminate="isIndeterminate()"
           ng-click="toggleAll()">
@@ -11,9 +12,10 @@
     <th>最后更新</th>
   </tr>
   <tr ng-repeat="platform in platformsArray | orderBy:'-fields.last_update_time'">
-    <td>
-    <md-checkbox ng-checked="exists($index, selected)"
-        ng-click="toggle($index, selected)">
+    <td class="checkable">
+    <md-checkbox ng-checked="exists(platform.pk, selected)"
+        class="in-table-check-box"
+        ng-click="toggle(platform.pk, selected)">
       {{ platform.fields.name }}
     </md-checkbox>
     </td>
@@ -36,40 +38,47 @@
         ng-class="{orderedBy: predicate == 'fields.platform'}"
         ng-click="order('fields.platform')">
       平台
-      <span class="sortorder" ng-show="predicate === 'fields.platform'" ng-class="{reverse:reverse}"></span>
+      <i ng-show="predicate === 'fields.platform'"
+          ng-class="{'fa fa-sort-desc':reverse, 'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
     </th>
     <th class="loan-name sortable"
         ng-class="{orderedBy: predicate == 'fields.name'}"
         ng-click="order('fields.name')">
       标名
-      <span class="sortorder" ng-show="predicate === 'fields.name'" ng-class="{reverse:reverse}"></span>
+      <i ng-show="predicate === 'fields.name'"
+          ng-class="{'fa fa-sort-desc':reverse, 'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
     </th>
     <th class="for-new-member sortable"
         ng-class="{orderedBy: predicate == 'fields.for_new_member'}"
         ng-click="order('fields.for_new_member')">
       新手标
-      <span class="sortorder" ng-show="predicate === 'fields.for_new_member'" ng-class="{reverse:reverse}"></span>
+      <i ng-show="predicate === 'fields.for_new_member'"
+          ng-class="{'fa fa-sort-desc':reverse, 'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
     </th>
     <th class="duration sortable"
         ng-class="{orderedBy: predicate == 'fields.duration'}"
         ng-click="order('fields.duration')">
       期限
-      <span class="sortorder" ng-show="predicate === 'fields.duration'" ng-class="{reverse:reverse}"></span>
+      <i ng-show="predicate === 'fields.duration'"
+          ng-class="{'fa fa-sort-desc':reverse, 'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
     </th>
     <th class="year-rate sortable"
         ng-class="{orderedBy: predicate == 'fields.year_rate'}"
         ng-click="order('fields.year_rate')">
       年化利率
-      <span class="sortorder" ng-show="predicate === 'fields.year_rate'" ng-class="{reverse:reverse}"></span>
+      <i ng-show="predicate === 'fields.year_rate'"
+          ng-class="{'fa fa-sort-desc':reverse, 'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
     </th>
     <th class='available-money sortable'
         ng-class="{orderedBy: predicate == 'fields.available_money'}"
         ng-click="order('fields.available_money')">
       可投金额
-      <span class="sortorder" ng-show="predicate === 'fields.available_money'" ng-class="{reverse:reverse}"></span>
+      <i ng-show="predicate === 'fields.available_money'"
+          ng-class="{'fa fa-sort-desc':reverse, 'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
     </th>
   </tr>
-  <tr ng-repeat="loan in loans | orderBy:predicate:reverse" ng-class-odd="'odd'" ng-class-even="'even'">
+  <tr ng-repeat="loan in loans | filter:filterByPlatform | orderBy:predicate:reverse"
+      ng-class-odd="'odd'" ng-class-even="'even'">
     <td class='platform-name' > {{ platforms[loan.fields.platform].name }}  </td>
     <td class="loan-name">  <a target="_blank" href="{{ loan.fields.link }}"> {{ loan.fields.name }} </a> </td>
     <td class="for-new-member">

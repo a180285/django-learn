@@ -16,6 +16,10 @@ table.platforms {
   float: right;
 }
 
+table.platforms th, table.platforms td {
+  text-align: left;
+}
+
 th.sortable {
   background-color: #EEF;
 }
@@ -121,4 +125,8 @@ th.orderedBy {
   cursor: pointer;
   color: #FFF;
   background-color: #888;
+}
+
+.in-table-check-box {
+  margin-bottom: 0px;
 }

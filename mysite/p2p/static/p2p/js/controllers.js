@@ -5,6 +5,7 @@ p2pApp.controller('P2pController', function ($scope, $http, $filter) {
   var filterBy = $filter('filter');
 
   var rawLoans = [];
+  var platformIds = [];
 
   $http.get('/p/loans-json/').success(function(data) {
     rawLoans = data;
@@ -17,6 +18,7 @@ p2pApp.controller('P2pController', function ($scope, $http, $filter) {
     for (i in data) {
       p = data[i];
       platforms[p.pk] = p.fields;
+      platformIds.push(p.pk);
     }
     $scope.platforms = platforms;
     $scope.platformsArray = data;
@@ -27,6 +29,10 @@ p2pApp.controller('P2pController', function ($scope, $http, $filter) {
     $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
     $scope.predicate = predicate;
   };
+
+  $scope.filterByPlatform = function(loan, loans, index) {
+    return $scope.selected.length == 0 || $scope.selected.indexOf(loan.fields.platform) > -1;
+  }
 
   $scope.filterMonth = function(minMonth, maxMonth, monthFilter) {
     minMonth = minMonth == undefined ? 0 : minMonth;
@@ -44,8 +50,7 @@ p2pApp.controller('P2pController', function ($scope, $http, $filter) {
     var idx = list.indexOf(item);
     if (idx > -1) {
       list.splice(idx, 1);
-    }
-    else {
+    } else {
       list.push(item);
     }
   };
@@ -55,19 +60,19 @@ p2pApp.controller('P2pController', function ($scope, $http, $filter) {
   };
 
   $scope.isIndeterminate = function() {
-    return ($scope.selected.length !== 0 &&
-        $scope.selected.length !== $scope.platformsArray.length);
+    return ($scope.selected.length != 0 &&
+        $scope.selected.length != platformIds.length);
   };
 
   $scope.isAllChecked = function() {
-    return $scope.selected.length === $scope.platformsArray.length;
+    return $scope.selected.length === platformIds.length;
   };
 
   $scope.toggleAll = function() {
-    if ($scope.selected.length === $scope.platformsArray.length) {
+    if ($scope.selected.length == platformIds.length) {
       $scope.selected = [];
-    } else if ($scope.selected.length === 0 || $scope.selected.length > 0) {
-      $scope.selected = $scope.platformsArray.slice(0);
+    } else {
+      $scope.selected = platformIds.slice(0);
     }
   };
 
