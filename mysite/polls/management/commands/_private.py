@@ -492,7 +492,7 @@ class YiQiHao(BasePlatform):
 
   def filter_func(self, raw_biao):
     encode_json(raw_biao)
-    return raw_biao['is_vip'] != '8' and raw_biao['statusname'] != u"待发布"
+    return raw_biao['is_vip'] != '8' and raw_biao['statusname'] != '待发布'
 
   def fill_fields(self, raw_biao, raw_datas):
     json_datas = raw_datas
