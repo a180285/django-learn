@@ -77,7 +77,7 @@
           ng-class="{'fa fa-sort-desc':reverse, 'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
     </th>
   </tr>
-  <tr ng-repeat="loan in loans | filter:filterByPlatform | orderBy:predicate:reverse"
+  <tr ng-repeat="loan in loans | filter:filterByPlatform | orderBy:predicate:reverse | limitTo: 50"
       ng-class-odd="'odd'" ng-class-even="'even'">
     <td class='platform-name' > {{ platforms[loan.fields.platform].name }}  </td>
     <td class="loan-name">  <a target="_blank" href="{{ loan.fields.link }}"> {{ loan.fields.name }} </a> </td>
