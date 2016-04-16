@@ -22,13 +22,14 @@ class Command(BaseCommand):
         NoNoBank(),
         PaiPaiDai(),
         ShiTouJinRong(),
+        TuanDai(),
         WeiDai(),
         XueShanDai(),
         YiQiHao(),
     ]
 
     # TODO: Show hint for interest_manage_rate
-    # platforms = [YiQiHao()]
+    # platforms = [TouNa()]
 
     for p in platforms:
       try:
@@ -41,3 +42,4 @@ class Command(BaseCommand):
 
 # 点融网：没有什么可投标
 # 开鑫贷：利率低，标少
+# 宝点网：网站编码不是utf-8

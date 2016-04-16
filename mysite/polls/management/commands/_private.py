@@ -38,8 +38,22 @@ def get_available_money(total_money, prograss):
 
 def encode_json(json):
   for key in json:
-    if json[key] and type(json[key]) != int:
-      json[key] = json[key].encode('utf-8')
+    if json[key]:
+      valueType = type(json[key])
+      if valueType == int or valueType == float or valueType == bool:
+        pass
+      elif valueType == dict:
+        encode_json(json[key])
+      else:
+        json[key] = json[key].encode('utf-8')
+
+def output_json(json, prefix = ''):
+  for key in json:
+    value = json[key]
+    if type(value) == dict:
+      output_json(value, prefix + str(key) + '.')
+    else:
+      print('%s%s -> %s' % (prefix, key, value))
 
 class BasePlatform():
   platform_name = None
@@ -128,15 +142,52 @@ class BasePlatform():
 
     duration = int(get_float(self.duration))
     duration_type = 30
-    if self.duration.find('天') != -1:
+    if str(self.duration).find('天') != -1:
       duration_type = 1
     self.duration = duration * duration_type
 
-    if self.available_money and not self.prograss:
+    if self.available_money is not None:
       self.available_money = get_float(self.available_money)
     else:
       self.prograss = get_float(self.prograss)
       self.available_money = get_available_money(self.total_money, self.prograss)
+
+class TuanDai(BasePlatform):
+  platform_name = "团贷网"
+  platform_link = 'http://www.tuandai.com/'
+
+  def get_request(self, index):
+    if index > 1:
+      return urllib2.Request('http://www.tuandai.com.cn/')
+    url = 'http://www.tuandai.com/pages/invest/invest_list.aspx' + '?keydj=f8b627ff6a&expiredj=1460792541'
+    values = {}
+    data = urllib.urlencode(values)
+    headers = {}
+    return urllib2.Request(url, data, headers)
+
+  def get_biaos(self, raw_data):
+    return raw_data.split('class="inv-list cl fix"')[1:]
+
+  def fill_fields(self, raw_biao, raw_datas):
+    # debug_output(raw_datas[:100])
+    delta = 0
+    # # # self.for_new_member = raw_biao.find('xinuser_ioc.png') != -1
+    self.link = 'http://www.tuandai.com' + get_link(raw_biao)
+
+    # for index in xrange(4,14):
+    #   if raw_datas[index]:
+    #     delta = index - 7
+    #     break
+
+    self.name = raw_datas[13 + delta]
+    self.total_money = get_float(raw_datas[26 + delta]) * 10000
+    self.year_rate = raw_datas[33 + delta]
+    self.duration = raw_datas[39 + delta]
+    # self.prograss = raw_datas[21 + delta]
+    self.available_money = get_float(raw_datas[28]) * get_float(raw_datas[30])
+
+    self.output_fields()
+    self.convert_data_by_detault()
 
 class WeiDai(BasePlatform):
   platform_name = "微贷网"
@@ -412,6 +463,9 @@ class ShiTouJinRong(BasePlatform):
   def get_biaos(self, raw_data):
     return raw_data.split('"loanListShow-li"')[1:]
 
+  def filter_func(self, raw_data):
+    return raw_data.find('VIP专享标') == -1
+
   def fill_fields(self, raw_biao, raw_datas):
     # debug_output(raw_datas)
     self.link = 'http://www.shitou.com' + get_link(raw_biao, sep = "'")
@@ -504,6 +558,7 @@ class YiQiHao(BasePlatform):
     self.prograss = json_datas['progress']
     self.duration = json_datas['deadline']
     self.for_new_member = json_datas['is_newbie'] == '100'
+    self.available_money = None
 
     self.output_fields()
     self.convert_data_by_detault()
