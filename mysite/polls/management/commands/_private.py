@@ -533,7 +533,7 @@ class YiQiHao(BasePlatform):
   platform_name = "一起好"
   platform_link = 'http://www.yiqihao.com/'
   is_json_format = True
-  interest_manage_rate = 5
+  interest_manage_rate = 3
 
   def get_request(self, index):
     values = {'p' : index,
