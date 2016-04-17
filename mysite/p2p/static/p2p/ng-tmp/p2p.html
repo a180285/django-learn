@@ -85,7 +85,12 @@
       <img ng-src="/static/polls/images/for-new-member-icon.png" ng-show="loan.fields.for_new_member">
     </td>
     <td class="duration"> {{ loan.fields.duration | showDuration }} </td>
-    <td class="year-rate"> {{ loan.fields.year_rate | number:1 }} % </td>
+    <td class="year-rate">
+      <i style="float: left" ng-show="platforms[loan.fields.platform].interest_manage_rate > 0"
+          class="fa fa-question-circle" aria-hidden="true">
+      <md-tooltip md-direction="top"> 已扣除利息管理费 {{ platforms[loan.fields.platform].interest_manage_rate }} % </md-tooltip>
+      </i>
+      {{ loan.fields.year_rate | number:1 }} % </td>
     <td class="available-money"> {{ loan.fields.available_money | number:0 }} </td>
   </tr>
 </table>

@@ -58,6 +58,7 @@ def output_json(json, prefix = ''):
 class BasePlatform():
   platform_name = None
   platform_link = None
+  interest_manage_rate = 0
   platform = None
 
   name = None
@@ -78,6 +79,7 @@ class BasePlatform():
     print("%s started ..." % self.platform_name)
     self.platform = Platform.objects.get_or_create(name = self.platform_name)[0]
     self.platform.link = self.platform_link
+    self.platform.interest_manage_rate = self.interest_manage_rate
     self.platform.save()
     self.platform.loan_set.all().delete()
 
@@ -139,6 +141,7 @@ class BasePlatform():
   def convert_data_by_detault(self):
     self.total_money = get_float(self.total_money)
     self.year_rate = get_float(self.year_rate)
+    self.year_rate = self.year_rate * (100 - self.interest_manage_rate) / 100
 
     duration = int(get_float(self.duration))
     duration_type = 30
@@ -530,6 +533,7 @@ class YiQiHao(BasePlatform):
   platform_name = "一起好"
   platform_link = 'http://www.yiqihao.com/'
   is_json_format = True
+  interest_manage_rate = 5
 
   def get_request(self, index):
     values = {'p' : index,
