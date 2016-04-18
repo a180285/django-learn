@@ -48,13 +48,6 @@
       <i ng-show="predicate === 'fields.name'"
           ng-class="{'fa fa-sort-desc':reverse, 'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
     </th>
-    <th class="for-new-member sortable"
-        ng-class="{orderedBy: predicate == 'fields.for_new_member'}"
-        ng-click="order('fields.for_new_member')">
-      新手标
-      <i ng-show="predicate === 'fields.for_new_member'"
-          ng-class="{'fa fa-sort-desc':reverse, 'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
-    </th>
     <th class="duration sortable"
         ng-class="{orderedBy: predicate == 'fields.duration'}"
         ng-click="order('fields.duration')">
@@ -80,9 +73,11 @@
   <tr ng-repeat="loan in loans | filter:filterByPlatform | orderBy:predicate:reverse | limitTo: 30"
       ng-class-odd="'odd'" ng-class-even="'even'">
     <td class='platform-name' > {{ platforms[loan.fields.platform].name }}  </td>
-    <td class="loan-name">  <a target="_blank" href="{{ loan.fields.link }}"> {{ loan.fields.name }} </a> </td>
-    <td class="for-new-member">
-      <img ng-src="/static/polls/images/for-new-member-icon.png" ng-show="loan.fields.for_new_member">
+    <td class="loan-name">  <a target="_blank" href="{{ loan.fields.link }}"> {{ loan.fields.name }}
+      </a>
+      <i ng-show="loan.fields.for_new_member" class="fa fa-user" aria-hidden="true">
+        <md-tooltip md-direction="top"> 新手专享 </md-tooltip>
+      </i>
     </td>
     <td class="duration"> {{ loan.fields.duration | showDuration }} </td>
     <td class="year-rate">

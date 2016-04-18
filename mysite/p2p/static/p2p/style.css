@@ -84,7 +84,7 @@ th.orderedBy {
 .loan-name > a {
   display: inline-block;
   overflow: hidden;
-  width: 10em;
+  width: 9em;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -129,4 +129,10 @@ th.orderedBy {
 
 .in-table-check-box {
   margin-bottom: 0px;
+}
+
+.fa-user {
+  color: red;
+  display: inline-block;
+  float: right;
 }
