@@ -133,6 +133,6 @@ th.orderedBy {
 
 .fa-user {
   color: red;
-  display: inline-block;
   float: right;
+  margin-left: 0.4em;
 }
