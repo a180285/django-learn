@@ -44,7 +44,12 @@ p2pApp.controller('P2pController', function ($scope, $http, $filter) {
     });
   };
 
-  $scope.selected = [];
+  $scope.selected = localStorage.getItem('platform_selected');
+  if ($scope.selected) {
+    $scope.selected = $scope.selected.split(',').map(Number);
+  } else {
+    $scope.selected = [];
+  }
 
   $scope.toggle = function (item, list) {
     var idx = list.indexOf(item);
@@ -53,6 +58,8 @@ p2pApp.controller('P2pController', function ($scope, $http, $filter) {
     } else {
       list.push(item);
     }
+
+    localStorage.setItem('platform_selected', list)
   };
 
   $scope.exists = function (item, list) {
@@ -74,6 +81,7 @@ p2pApp.controller('P2pController', function ($scope, $http, $filter) {
     } else {
       $scope.selected = platformIds.slice(0);
     }
+    localStorage.setItem('platform_selected', $scope.selected)
   };
 
 })
