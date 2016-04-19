@@ -357,7 +357,7 @@ class AnJieCaiFu(BasePlatform):
     self.link = 'http://www.haoinvest.com' + get_link(raw_biao)
 
     delta = 0
-    if self.for_new_member:
+    if not raw_datas[16]:
       delta = 3
     self.name = raw_datas[5 + delta]
     self.available_money = raw_datas[16 + delta]

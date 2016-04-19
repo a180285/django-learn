@@ -29,7 +29,7 @@ class Command(BaseCommand):
     ]
 
     # TODO: Show hint for interest_manage_rate
-    # platforms = [YiQiHao()]
+    # platforms = [XueShanDai()]
 
     for p in platforms:
       try:
