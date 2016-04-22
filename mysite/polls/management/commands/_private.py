@@ -472,11 +472,14 @@ class ShiTouJinRong(BasePlatform):
   def fill_fields(self, raw_biao, raw_datas):
     # debug_output(raw_datas)
     self.link = 'http://www.shitou.com' + get_link(raw_biao, sep = "'")
-    self.name = raw_datas[14]
-    self.total_money = raw_datas[34]
-    self.year_rate = raw_datas[26]
-    self.duration = raw_datas[30]
-    self.prograss = raw_datas[52]
+    delta = 0
+    if not raw_datas[14]:
+      delta = 2
+    self.name = raw_datas[14 + delta]
+    self.total_money = raw_datas[34 + delta]
+    self.year_rate = raw_datas[26 + delta]
+    self.duration = raw_datas[30 + delta]
+    self.prograss = raw_datas[52 + delta]
 
     self.output_fields()
 
@@ -490,6 +493,7 @@ class ShiTouJinRong(BasePlatform):
 class EDai365(BasePlatform):
   platform_name = "365易贷"
   platform_link = 'http://www.365edai.cn/'
+  interest_manage_rate = 10
 
   def filter_func(self, raw_biao):
     return raw_biao.find('密码') == -1
@@ -527,7 +531,8 @@ class EDai365(BasePlatform):
     if self.duration_type == '月':
       self.duration = self.duration * 30
 
-    self.year_rate = get_float(self.year_rate) + get_float(self.additional_rate) * 360 / self.duration
+    self.year_rate = (get_float(self.year_rate) * (100 - self.interest_manage_rate) / 100
+        + get_float(self.additional_rate) * 360 / self.duration)
 
 class YiQiHao(BasePlatform):
   platform_name = "一起好"

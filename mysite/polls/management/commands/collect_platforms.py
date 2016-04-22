@@ -28,8 +28,7 @@ class Command(BaseCommand):
         YiQiHao(),
     ]
 
-    # TODO: Show hint for interest_manage_rate
-    # platforms = [XueShanDai()]
+    # platforms = [ShiTouJinRong()]
 
     for p in platforms:
       try:
