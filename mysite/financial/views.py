@@ -34,11 +34,11 @@ class GenericDateView(DateMixin):
 class OwnerRequiredView(UserPassesTestMixin, View):
   def test_func(self):
 
-    if self.request.user.is_authenticated(): 
+    if self.request.user.is_authenticated():
       self.login_url = reverse('financial:user_home_page', args=())
       self.redirect_field_name = None
 
-    return (self.request.user.is_authenticated() and 
+    return (self.request.user.is_authenticated() and
       self._check_account_owner() and
       self._check_record_owner())
 
@@ -144,7 +144,7 @@ class CashFlowView(OwnerRequiredView, GenericDateView):
     cash_flow_daily = {}
     money_left = 0
     today = date.today()
-    for i in xrange(-5,28):
+    for i in xrange(-3,33):
       day = today + timezone.timedelta(days = i)
       while self._has_cash_flow_before(cash_flows, day):
         cash_flow = cash_flows.pop(0)
@@ -184,7 +184,7 @@ class CashFlowView(OwnerRequiredView, GenericDateView):
       CashFlow.objects.create(
         user_id = user_id,
         account_record_id = record.id,
-        date = record.date, 
+        date = record.date,
         money = record.money)
 
 class DeleteRecord(OwnerRequiredView):
