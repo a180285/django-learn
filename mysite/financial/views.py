@@ -25,6 +25,8 @@ from django.views.generic import View
 
 from django.views.generic.dates import DateMixin
 
+from django.core import serializers
+
 class GenericDateView(DateMixin):
   date_field = '%m-%d'
 
@@ -192,3 +194,33 @@ class DeleteRecord(OwnerRequiredView):
     AccountRecord.objects.get(pk = record_id).delete()
 
     return HttpResponseRedirect(reverse('financial:show_record', args = (account_id, )))
+
+class CashFlowNgView(OwnerRequiredView, GenericDateView):
+  def get(self, request):
+    return render(self.request, 'financial/cash-flow-ng.html', {})
+
+class GetAccountsView(OwnerRequiredView):
+  def get(self, request):
+    accounts = request.user.useraccount_set.all()
+    return HttpResponse(serializers.serialize("json", accounts))
+
+class InsertOrUpdateAccountView(OwnerRequiredView):
+  def post(self, request, account_id = None):
+    name = request.POST['name']
+    account = None
+    if account_id:
+      account = UserAccount.objects.get(pk = account_id)
+      account.name = name
+      account.save()
+    else:
+      account = UserAccount.objects.create(
+        user_id = request.user.id,
+        name = name)
+
+    return HttpResponse(serializers.serialize("json", [account]))
+
+class DeleteAccountView(OwnerRequiredView):
+  def post(self, request, account_id):
+    print("account_id" + str(account_id))
+    UserAccount.objects.get(pk = account_id).delete()
+    return HttpResponse('')

@@ -17,7 +17,7 @@ def split_by_tag(raw_data_str):
   return [raw_data.split('<')[0].strip() for raw_data in raw_data_str.split('>')]
 
 def debug_output(datas):
-  for index in xrange(0, len(datas)):
+  for index in xrange(0, len(datas[:100])):
     print("%s -> %s" % (index, datas[index][:100]))
 
 def get_link(raw_txt, sep = '"', index = 1):
@@ -348,22 +348,27 @@ class AnJieCaiFu(BasePlatform):
     data = urllib.urlencode(values)
     return urllib2.Request(url, data)
 
+  def get(self, index):
+    if index > 1:
+      return False
+    return BasePlatform.get(self, index)
+
   def get_biaos(self, raw_data):
     return raw_data.split('class="tz_project_j_l"')[1:]
 
   def fill_fields(self, raw_biao, raw_datas):
-    # debug_output(raw_datas)
+    debug_output(raw_datas)
     self.for_new_member = raw_biao.find('xinuser_ioc.png') != -1
     self.link = 'http://www.haoinvest.com' + get_link(raw_biao)
 
     delta = 0
-    if not raw_datas[16]:
+    if not raw_datas[21]:
       delta = 3
     self.name = raw_datas[5 + delta]
-    self.available_money = raw_datas[16 + delta]
-    self.total_money = raw_datas[17 + delta]
-    self.year_rate = raw_datas[23 + delta]
-    self.duration = raw_datas[31 + delta]
+    self.available_money = raw_datas[21 + delta]
+    self.total_money = raw_datas[22 + delta]
+    self.year_rate = raw_datas[28 + delta]
+    self.duration = raw_datas[36 + delta]
     # self.prograss = raw_datas[52]
 
     self.output_fields()

@@ -1,3 +1,11 @@
+.no-margin {
+  margin: 0;
+}
+
+.account-name-input {
+  height: 30px;
+}
+
 li a {
     color: green;
 }
@@ -8,10 +16,6 @@ hr {
 
 p {
   margin-left: 20px;
-}
-
-body {
-    background: white url("images/small-fundraising-heart.png") no-repeat right bottom;
 }
 
 input[type="submit"] {

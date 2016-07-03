@@ -1,0 +1,26 @@
+<div style="display: inline-block; margin:0 200px;">
+
+  <div>
+    <md-input-container class='no-margin'>
+      <input ng-model='FinancialCtrl.newAccount.name'>
+    </md-input-container>
+    <md-button class="md-icon-button" ng-click="FinancialCtrl.addAccount()">
+      <i class="material-icons">plus_one</i>
+    </md-button>
+  </div>
+
+  <div ng-repeat="account in FinancialCtrl.getAccounts()">
+    <div ng-hide="account.isDeleted">
+      <md-input-container class='no-margin account-name-input'>
+        <input ng-model="account.fields.name" ng-readonly="!account.isEditing">
+      </md-input-container>
+      <md-button class="md-icon-button" ng-click="FinancialCtrl.changeEditingStatus(account)">
+        <i class="material-icons" >{{ account.isEditing ? 'save' : 'mode_edit' }}</i>
+      </md-button>
+      <md-button class="md-icon-button" ng-click="FinancialCtrl.deleteAccount(account)">
+        <i class="material-icons">delete_forever</i>
+      </md-button>
+    </div>
+  </div>
+
+</div>

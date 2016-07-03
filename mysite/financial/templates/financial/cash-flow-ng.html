@@ -1,9 +1,12 @@
 {% load staticfiles %}
-<html ng-app="p2pApp">
+<html ng-app="financialApp" ng-init="csrfToken = '{{ csrf_token }}'">
   <head>
-    <link rel="stylesheet" type="text/css" href="{% static 'p2p/style.css' %}" />
+    <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+
+    <link href="//cdn.bootcss.com/material-design-icons/2.2.0/iconfont/material-icons.css" rel="stylesheet">
     <link href="//cdn.bootcss.com/angular-material/1.0.6/angular-material.css" rel="stylesheet">
     <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'financial/style.css' %}" />
 
     <script src="//cdn.bootcss.com/angular.js/1.5.0/angular.min.js"></script>
     <script src="//cdn.bootcss.com/angular.js/1.5.0/angular-animate.min.js"></script>
@@ -11,13 +14,9 @@
     <script src="//cdn.bootcss.com/angular.js/1.5.0/angular-messages.min.js"></script>
     <script src="//cdn.bootcss.com/angular-material/1.0.6/angular-material.js"></script>
 
-    <script src="{% static 'p2p/js/controllers.js' %} "></script>
-    <script src="{% static 'p2p/js/filters.js' %} "></script>
+    <script src="{% static 'financial/js/controllers.js' %} "></script>
 
   </head>
-  <body>
-    <div ng-controller="P2pController">
-      <div p2p-container></div>
-    </div>
+  <body financial-container>
   </body>
 </html>
