@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'polls.apps.PollsConfig',
     'p2p.apps.P2PConfig',
     'financial.apps.FinancialConfig',
+    'lianjia.apps.LianjiaConfig',
     'django_tables2',
 ]
 
