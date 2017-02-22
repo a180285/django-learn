@@ -19,6 +19,9 @@ class SecondHandHouse(models.Model):
   last_collect_time = models.DateTimeField(default = timezone.now)
   like_rate = models.IntegerField(default = 3)
   hidden = models.BooleanField(default = False)
+  area = models.IntegerField(default = 0)
+  building_year = models.IntegerField(default = 0)
+  has_pictures = models.BooleanField(default = True)
 
   def __str__(self):
     return self.title
