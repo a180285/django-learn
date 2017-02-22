@@ -18,6 +18,7 @@ class SecondHandHouse(models.Model):
   first_price = models.IntegerField(default = 0)
   last_collect_time = models.DateTimeField(default = timezone.now)
   like_rate = models.IntegerField(default = 3)
+  hidden = models.BooleanField(default = False)
 
   def __str__(self):
     return self.title

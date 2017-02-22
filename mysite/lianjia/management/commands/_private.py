@@ -27,7 +27,21 @@ def get_float(raw_str):
 
 class CheckLianjia():
   def run(self):
-    response = urllib2.urlopen('http://cq.lianjia.com/ershoufang/jiangbei/tf1de1y1sf1bp90ep170/')
+    urls = [
+      'http://cq.lianjia.com/ershoufang/jiangbeizui/de1de2y1bp90ep170/',
+      'http://cq.lianjia.com/ershoufang/jiangbei/tf1de1y1sf1bp90ep170/',
+      'http://cq.lianjia.com/ershoufang/jiangbei/de1de2y1bp90ep170/',
+    ]
+    for link in urls:
+      linkParts = link.split('/')
+      linkParts[-2] = 'pg%s' + linkParts[-2]
+      self.trySearchResultLink('/'.join(linkParts), 1)
+
+  def trySearchResultLink(self, linkPattern, pageId):
+    link = linkPattern % (pageId,)
+    print ('Try search result page : %s' % (link,))
+    print ('Page : %d' % (pageId,))
+    response = urllib2.urlopen(link)
     html = response.read()
 
     parsed_html = BeautifulSoup(html, 'lxml')
@@ -37,10 +51,17 @@ class CheckLianjia():
     for c in ans.children:
         title = c.find('div', attrs={'class' : 'title'})
         self.getDetail(title.a['href'])
+    pageDiv = parsed_html.body.find('div', attrs={'comp-module':'page'})
+    jsonData = simplejson.loads(pageDiv['page-data'])
+    print ('%d / %d' % (pageId, int(jsonData['totalPage'])))
+    if pageId < int(jsonData['totalPage']):
+      self.trySearchResultLink(linkPattern, pageId + 1)
 
   def getDetail(self, link):
     print('Try with link: %s' % (link))
-    house = SecondHandHouse.objects.get_or_create(unique_link = link)[0]
+    if SecondHandHouse.objects.filter(unique_link = link).exists():
+      print ("link exists")
+      return
     response = urllib2.urlopen(link)
     html = response.read()
     parsed_html = BeautifulSoup(html, 'lxml')
@@ -57,6 +78,8 @@ class CheckLianjia():
     print 'totalPrice : ', totalPrice
     print 'unitPriceValue : ', unitPriceValue
     print 'firstPrice : ', firstPrice
+
+    house = SecondHandHouse.objects.get_or_create(unique_link = link)[0]
     house.title = parsed_html.body.find('h1', attrs={'class':'main'}).text
     house.total_price = totalPrice
     house.unit_price = unitPriceValue
