@@ -22,6 +22,8 @@ class SecondHandHouse(models.Model):
   area = models.IntegerField(default = 0)
   building_year = models.IntegerField(default = 0)
   has_pictures = models.BooleanField(default = True)
+  for_sell = models.BooleanField(default = True)
+  rooms_number = models.CharField(max_length = 1024, default = '')
 
   def __str__(self):
     return self.title

@@ -45,17 +45,22 @@ def buildRequest(url):
   return req
 
 def openUrl(link):
-  seconds = 5
+  seconds = 4
   print('Sleep for %d s' % seconds)
   time.sleep(seconds)
-  p = subprocess.Popen(['curl', link], stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE)
-  out, err = p.communicate()
-  return out
+  useCurl = False
+  if useCurl:
+    p = subprocess.Popen(['curl', link], stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE)
+    out, err = p.communicate()
+    return out
+  else: # urllib
+    response = urllib2.urlopen(buildRequest(link))
+    return response.read()
 
 class CheckLianjia():
   def run(self):
-    show_url_debug = True
+    show_url_debug = False
     if show_url_debug:
       httpHandler = urllib2.HTTPHandler(debuglevel=1)
       httpsHandler = urllib2.HTTPSHandler(debuglevel=1)
@@ -107,7 +112,6 @@ class CheckLianjia():
     link = linkPattern % (pageId,)
     print ('Try search result page : %s' % (link,))
     print ('Page : %d' % (pageId,))
-    # response = urllib2.urlopen(buildRequest(link))
     html = openUrl(link)
 
     parsed_html = BeautifulSoup(html, 'lxml')
@@ -134,12 +138,17 @@ class CheckLianjia():
     parsed_html = BeautifulSoup(html, 'lxml')
     smallPics = parsed_html.body.find('ul', attrs={'class': 'smallpic'})
     pictures = len(smallPics.find_all('li'))
+
+    titleTag = parsed_html.body.find('div', attrs={'class':'title'})
+    title = titleTag.h1.text
+    subTitle = titleTag.div.text
+
     price = parsed_html.body.find('div', attrs={'class':'price'})
     totalPrice = get_float_utf8(price.span.text)
     unitPriceValue = price.find('span', attrs={'class':'unitPriceValue'}).text
     tax = price.find('div', attrs={'class':'tax'})
     firstPrice = tax.span.text
-    panelDetail = tax.find('span', attrs={'class':'panelDetail'}).text
+    # panelDetail = tax.find('span', attrs={'class':'panelDetail'}).text
 
     unitPriceValue = get_float_utf8(unitPriceValue)
     firstPrice = get_float_utf8(firstPrice)
@@ -149,20 +158,25 @@ class CheckLianjia():
     area = get_float_utf8(area)
     buildingYear = areaInfo.find('div', attrs={'class':'subInfo'}).text
     buildingYear = get_float_utf8(buildingYear)
+    roomsNumber = parsed_html.body \
+        .find('div', attrs={'class':'room'}) \
+        .find('div', attrs={'class':'mainInfo'}).text
 
     print 'totalPrice : ', totalPrice
     print 'unitPriceValue : ', unitPriceValue
     print 'firstPrice : ', firstPrice
 
     house = SecondHandHouse.objects.get_or_create(unique_link = link)[0]
-    house.title = parsed_html.body.find('h1', attrs={'class':'main'}).text
+    house.title = title
+    house.sub_title = subTitle
     house.total_price = totalPrice
     house.unit_price = unitPriceValue
     house.first_price = firstPrice
     house.last_collect_time = timezone.now()
     house.area = area
     house.building_year = buildingYear
-    house.has_pictures = (pictures > 0)
+    house.has_pictures = (pictures > 1)
+    house.rooms_number = roomsNumber
     print house
     house.save()
 
