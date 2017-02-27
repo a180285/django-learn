@@ -21,6 +21,10 @@ import simplejson
 import subprocess
 import time
 from random import shuffle
+import datetime
+
+only_update = True
+check_pictures = True
 
 float_pattern = re.compile('[\d,.]+')
 def get_float(raw_str):
@@ -46,13 +50,15 @@ def buildRequest(url):
   return req
 
 def openUrl(link):
-  seconds = 5
-  print('Sleep for %d s' % seconds)
+  seconds = 9
+  print('Now : %s , Sleep for %d s' % (datetime.datetime.now(), seconds))
   time.sleep(seconds)
-  useCurl = False
+  useCurl = True
   if useCurl:
-    p = subprocess.Popen(['curl', link], stdout=subprocess.PIPE,
-                                         stderr=subprocess.PIPE)
+    p = subprocess.Popen(
+        ['curl', link, '--socks5', '127.0.0.1:3213'],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE)
     out, err = p.communicate()
     return out
   else: # urllib
@@ -152,8 +158,10 @@ class CheckLianjia():
     return errorCount
 
   def getDetail(self, link):
-    if SecondHandHouse.objects.filter(unique_link = link).exists():
-      return
+    if only_update and SecondHandHouse.objects.filter(unique_link = link).exists():
+        house_tmp = SecondHandHouse.objects.get(unique_link = link)
+        if (not check_pictures) or house_tmp.has_pictures:
+          return
 
     print('Try with link: %s' % (link))
     # response = urllib2.urlopen(link)
@@ -181,6 +189,11 @@ class CheckLianjia():
     area = get_float_utf8(area)
     buildingYear = areaInfo.find('div', attrs={'class':'subInfo'}).text
 
+    listingTime = parsed_html.body \
+      .find('div', attrs={'class':'transaction'}) \
+      .find_all('li')[0] \
+      .contents[1]
+
     try:
       buildingYear = get_float_utf8(buildingYear)
     except Exception, e:
@@ -192,7 +205,8 @@ class CheckLianjia():
 
     print 'totalPrice : ', totalPrice
     print 'unitPriceValue : ', unitPriceValue
-    print 'firstPrice : ', firstPrice
+    print 'pictures : ', pictures
+    print 'listingTime : ', listingTime
 
     house = SecondHandHouse.objects.get_or_create(unique_link = link)[0]
     house.title = title
@@ -205,6 +219,7 @@ class CheckLianjia():
     house.building_year = buildingYear
     house.has_pictures = (pictures > 1)
     house.rooms_number = roomsNumber
+    house.listing_time = listingTime
     if buildingYear < 2007:
       house.hidden = True
     print house

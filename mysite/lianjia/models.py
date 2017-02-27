@@ -25,6 +25,7 @@ class SecondHandHouse(models.Model):
   for_sell = models.BooleanField(default = True)
   rooms_number = models.CharField(max_length = 1024, default = '')
   remarks = models.CharField(max_length = 10000, null = True, blank = True)
+  listing_time = models.CharField(max_length = 10000, null = True, blank = True)
 
   def __str__(self):
     return self.title

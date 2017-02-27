@@ -22,10 +22,11 @@ def link_type(obj):
 link_type.short_description = 'Link'
 
 class SecondHandHouseAdmin(admin.ModelAdmin):
-  list_display = ('unit_price', 'like_rate', 'hidden', link_type, 'for_sell', 'remarks')
+  list_display = ('unit_price', 'like_rate', 'hidden', link_type, 'for_sell', 'area', 'remarks')
   list_editable = ('like_rate', 'hidden', 'for_sell', 'remarks')
   list_display_links = ('unit_price',)
-  list_filter = ('hidden', 'has_pictures', 'for_sell', 'building_year')
+  list_filter = ('hidden', 'has_pictures', 'for_sell', 'like_rate', 'building_year')
+  search_fields = ['title']
   list_per_page = 10
 
 admin.site.register(SecondHandHouse, SecondHandHouseAdmin)
