@@ -45,7 +45,7 @@ class Command(BaseCommand):
       progress = item.find('i', attrs = {'class' : 'fr'}).text
       progress = get_float_utf8(progress)
       print '%3d month with progress : %3d%% %s' % (duration, progress, (iconNew and 'New' or ''))
-      if iconNew is None and duration < 1.4 and progress < 100:
+      if iconNew is None and duration < 3.4 and progress < 100:
         self.send_notification(duration, progress)
 
   def send_notification(self, duration, progress):
