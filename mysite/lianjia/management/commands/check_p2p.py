@@ -33,7 +33,7 @@ class Command(BaseCommand):
     self.stdout.write(self.style.SUCCESS('Successfully run the job '))
 
   def run(self):
-    url = 'https://www.chenghuitong.net/borrow/'
+    url = 'https://www.chenghuitong.net/borrow/1-1-0-0-0-1/'
     response = urllib2.urlopen(url)
     parsed_html = BeautifulSoup(response.read(), 'lxml')
     conList = parsed_html.find('div', attrs = {'class' : 'list-con'})
