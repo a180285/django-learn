@@ -50,10 +50,10 @@ def buildRequest(url):
   return req
 
 def openUrl(link):
-  seconds = 9
+  seconds = 20
   print('Now : %s , Sleep for %d s' % (datetime.datetime.now(), seconds))
   time.sleep(seconds)
-  useCurl = True
+  useCurl = False
   if useCurl:
     p = subprocess.Popen(
         ['curl', link, '--socks5', '127.0.0.1:3213'],
