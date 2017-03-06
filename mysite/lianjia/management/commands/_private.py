@@ -82,32 +82,33 @@ class CheckLianjia():
 
     urls = [
       # 江北
-      'http://cq.lianjia.com/ershoufang/jiangbeizui/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/wulidian1/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/guanyinqiao/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/huangnibang/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/beibinlu/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/longtousi/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/huayuanxincun/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/songshuqiao/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/longxi/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/jiazhou/de1de2bp90ep170/',
+      'http://cq.lianjia.com/ershoufang/jiangbeizui/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/wulidian1/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/guanyinqiao/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/huangnibang/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/beibinlu/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/longtousi/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/huayuanxincun/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/songshuqiao/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/longxi/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/jiazhou/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/ranjiaba/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/beihuan/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/caifuzhongxin1/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
 
       # 渝中
-      'http://cq.lianjia.com/ershoufang/chaotianmen/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/jiefangbei1/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/shangqingsi/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/lianglukou/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/hualongqiao/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/daping/de1de2bp90ep170/',
+      'http://cq.lianjia.com/ershoufang/chaotianmen/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/jiefangbei1/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/shangqingsi/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/lianglukou/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/hualongqiao/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/daping/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
 
       # 南岸
-      'http://cq.lianjia.com/ershoufang/danzishi/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/nanbinlu/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/rongqiaobandao/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/nanping/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/sigongli/de1de2bp90ep170/',
-      'http://cq.lianjia.com/ershoufang/danlonglu/de1de2bp90ep170/',
+      'http://cq.lianjia.com/ershoufang/rongqiaobandao/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/nanping/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/sigongli/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
+      'http://cq.lianjia.com/ershoufang/danlonglu/de3de2ie2sf1l2l3ba70ea120bp90ep150/',
     ]
 
     errorCount = 0
