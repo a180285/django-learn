@@ -49,8 +49,7 @@ def buildRequest(url):
   req.get_method = lambda: 'GET'
   return req
 
-def openUrl(link):
-  seconds = 201
+def openUrl(link, seconds):
   print('Now : %s , Sleep for %d s' % (datetime.datetime.now(), seconds))
   time.sleep(seconds)
   useCurl = False
@@ -128,7 +127,7 @@ class CheckLianjia():
     print ('Page : %d' % (pageId,))
     html = ''
     try:
-      html = openUrl(link)
+      html = openUrl(link, self.sleep)
     except Exception, e:
       print 'Search result page error occurs.'
       return 1000
@@ -166,7 +165,7 @@ class CheckLianjia():
 
     print('Try with link: %s' % (link))
     # response = urllib2.urlopen(link)
-    html = openUrl(link)
+    html = openUrl(link, self.sleep)
     parsed_html = BeautifulSoup(html, 'lxml')
     smallPics = parsed_html.body.find('ul', attrs={'class': 'smallpic'})
     pictures = len(smallPics.find_all('li'))

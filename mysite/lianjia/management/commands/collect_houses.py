@@ -10,8 +10,14 @@ import traceback
 class Command(BaseCommand):
   help = 'Running for cron-job'
 
+  def add_arguments(self, parser):
+      parser.add_argument('--sleep', type=int, default=7)
+
   def handle(self, *args, **options):
+    sleep = options['sleep']
+    print 'sleep', sleep
     checker = CheckLianjia()
+    checker.sleep = sleep
     try:
         checker.run()
     except Exception, e:
