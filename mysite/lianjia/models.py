@@ -39,3 +39,6 @@ class PresalePermit(models.Model):
   permit_name = models.CharField(max_length = 1024)
   permit_type = models.CharField(max_length = 1024)
   date = models.CharField(max_length = 1024)
+
+  def __str__(self):
+    return self.title
