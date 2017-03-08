@@ -90,6 +90,22 @@ class Command(BaseCommand):
 
     self.stdout.write(self.style.SUCCESS('Successfully run the job '))
 
+  def send_notify(self, title, text):
+    p = subprocess.Popen([
+        'curl', '-s',
+        '--form-string', "token=a7t9p2e7vffk1v2qah2td7ho4ekbo3",
+        '--form-string', "user=uqbq8x24387odcnrwvpdxqgc9ey85u",
+        '--form-string', "message=%s" % (text, ),
+        '--form-string', "title=%s" % (title, ),
+        'https://api.pushover.net/1/messages.json',
+
+        # '--socks5', '127.0.0.1:3213'
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE)
+    out, err = p.communicate()
+    print out
+
   def run(self):
     url_prefix = 'http://www.cqgtfw.gov.cn/spjggs/fw/spfysxk/'
     url_patten_0 = 'http://www.cqgtfw.gov.cn/spjggs/fw/spfysxk/index.htm'
@@ -125,6 +141,7 @@ class Command(BaseCommand):
         if len(permit.title) > 0:
           continue
 
+
         permit.detail_link = detail_link
         permit.title = title
         permit.company = company
@@ -132,8 +149,10 @@ class Command(BaseCommand):
         permit.permit_name = permit_name
         permit.permit_type = permit_type
         permit.date = date
-        new_added += 1
+        self.send_notify('permit_name : ' + permit_name, title)
+
         permit.save()
+        new_added += 1
 
       if new_added == 0:
         break
