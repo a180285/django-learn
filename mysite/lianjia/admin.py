@@ -3,7 +3,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import SecondHandHouse
+from .models import SecondHandHouse, PresalePermit
 
 from django.contrib import admin
 from django.utils.safestring import mark_safe
@@ -29,5 +29,18 @@ class SecondHandHouseAdmin(admin.ModelAdmin):
   search_fields = ['title']
   list_per_page = 10
 
+def permit_link_type(obj):
+    return mark_safe(u'<a href="%s" target="_blank">%s</a>' % (
+      obj.detail_link,
+      obj.title
+      ))
+permit_link_type.short_description = 'title'
+
+class PresalePermitAdmin(admin.ModelAdmin):
+  search_fields = ['title', 'company', 'location', 'permit_name']
+  list_display = (permit_link_type, 'company', 'location', 'permit_name', 'permit_type', 'date')
+  list_display_links = ('company',)
+
 admin.site.register(SecondHandHouse, SecondHandHouseAdmin)
+admin.site.register(PresalePermit, PresalePermitAdmin)
 
