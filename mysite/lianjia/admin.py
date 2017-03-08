@@ -40,6 +40,7 @@ class PresalePermitAdmin(admin.ModelAdmin):
   search_fields = ['title', 'company', 'location', 'permit_name']
   list_display = (permit_link_type, 'company', 'location', 'permit_name', 'permit_type', 'date')
   list_display_links = ('company',)
+  list_per_page = 10
 
 admin.site.register(SecondHandHouse, SecondHandHouseAdmin)
 admin.site.register(PresalePermit, PresalePermitAdmin)
