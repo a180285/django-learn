@@ -95,8 +95,8 @@ class Command(BaseCommand):
         'curl', '-s',
         '--form-string', "token=a7t9p2e7vffk1v2qah2td7ho4ekbo3",
         '--form-string', "user=uqbq8x24387odcnrwvpdxqgc9ey85u",
-        '--form-string', "message=%s" % (text, ),
-        '--form-string', "title=%s" % (title, ),
+        '--form-string', "message=%s" % (text.encode('utf-8'), ),
+        '--form-string', "title=%s" % (title.encode('utf-8'), ),
         'https://api.pushover.net/1/messages.json',
 
         # '--socks5', '127.0.0.1:3213'
