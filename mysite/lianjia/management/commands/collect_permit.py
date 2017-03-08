@@ -114,7 +114,7 @@ class Command(BaseCommand):
         permit_type = cells[4].text
         date = cells[5].text[14:33]
 
-        print 'title : ', title
+        # print 'title : ', title
         print 'date : ', date
 
         if int(date[:4]) < 2016:
