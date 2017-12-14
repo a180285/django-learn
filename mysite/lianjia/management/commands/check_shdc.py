@@ -140,9 +140,8 @@ class Command(BaseCommand):
         book_week_day = book.find('div', attrs={'class': ['huiszhou', 'zhou']}).text.strip()
         book_number = book.find('div', attrs={'class': 'renshu'}).text.strip()
         title = '%s %s %s' % (book_date, book_week_day, book_number)
-        title = title.encode('utf-8')
         if book_date != '12-16':
           continue
-        print(title)
+        print(title.encode('utf-8'))
         if book_number != u'已满':
           self.send_notify(title, title)
