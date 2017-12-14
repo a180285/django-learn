@@ -72,7 +72,7 @@ def buildRequests():
   url = 'http://yuyue.shdc.org.cn/ajaxSearchOrderNumInfoAction.action'
   datas = [
     'platformHosId=30&platformDeptId=938&deptdesc=&docInfo.hisDoctId=270&visitLevelCode=1&nextNumInfo=0',
-    # 'platformHosId=30&platformDeptId=936&deptdesc=&docInfo.hisDoctId=070&visitLevelCode=1&nextNumInfo=0'
+    'platformHosId=30&platformDeptId=936&deptdesc=&docInfo.hisDoctId=070&visitLevelCode=1&nextNumInfo=0'
   ]
   headers = {
     'Accept': '*/*',
@@ -140,8 +140,8 @@ class Command(BaseCommand):
         book_week_day = book.find('div', attrs={'class': ['huiszhou', 'zhou']}).text.strip()
         book_number = book.find('div', attrs={'class': 'renshu'}).text.strip()
         title = '%s %s %s' % (book_date, book_week_day, book_number)
-        if book_date != '12-16':
-          continue
+        # if book_date != '12-16':
+        #   continue
         print(title.encode('utf-8'))
         if book_number != u'已满':
           self.send_notify(title, title)
