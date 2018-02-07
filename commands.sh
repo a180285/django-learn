@@ -9,6 +9,7 @@ echo "/bin/zsh" >> .bashrc
 # Install django
 sudo yum install python-pip
 pip install Django==1.9.4 django_tables2==1.15 bs4 simplejson lxml
+pip install -r requirments.txt
 mkdir git && cd git
 git clone https://github.com/a180285/django-learn.git
 
